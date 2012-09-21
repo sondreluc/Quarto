@@ -62,5 +62,17 @@ public class Board {
 		this.board = board;
 	}
 	
+	public ArrayList<Piece> getRow(int index){
+		return this.board.get(index);
+	}
+	
+	public ArrayList<Piece> getColumn(int index){
+		ArrayList<Piece> col = new ArrayList<>();
+		for (int i = 0; i < 4; i++) {
+			col.add(board.get(i).get(index));
+		}
+		return col;
+	}
+	
 	
 }
