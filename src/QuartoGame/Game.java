@@ -28,6 +28,8 @@ public class Game {
 		
 		Piece piece = this.activePlayer.pickPiece(board);
 		if(log){
+			System.out.println();
+			System.out.println("Remainding pieces:"+board.remainingToSting());
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" picks "+piece.toString());
 			
 		}
@@ -36,6 +38,8 @@ public class Game {
 			this.activePlayer = this.player2;
 		else
 			this.activePlayer = this.player1;
+		
+		
 		
 		this.activePlayer.placePiece(board, piece);
 		
@@ -59,7 +63,7 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.RANDOM, 1), new Player(PlayerType.RANDOM, 2));
+		Game newGame = new Game(new Player(PlayerType.NOVICE, 1), new Player(PlayerType.RANDOM, 2));
 		
 		boolean finished = false;
 				

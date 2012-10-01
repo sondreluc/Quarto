@@ -292,7 +292,8 @@ public class Board {
 	}
 
 	public void setBoard(ArrayList<Piece> board) {
-		this.board = board;
+		this.board.clear();
+		this.board.addAll(board);
 	}
 	
 	public ArrayList<Piece> getRow(int rowNr){
@@ -356,12 +357,21 @@ public class Board {
 			tempBoard.setBoard(this.getBoard());
 			tempBoard.placePiece(i, piece);
 //
+				
 //			if(tempBoard.checkForWinner()){
 //				return i;
 //			}
 
 		}
 		return -1;
+	}
+	
+	public String remainingToSting(){
+		String str = " ";
+		for(Piece p: getRemainingPieces()){
+			str+=p.toString()+", ";
+		}
+		return str;
 	}
 	
 	
