@@ -12,12 +12,28 @@ public class Piece {
 	private Height height;
 	private Shape shape;
 	private Consistensy consistensy;
+	private String id;
 	
 	public Piece(Color c, Height h, Shape s, Consistensy con){
 		this.color = c;
 		this.height = h;
 		this.shape = s;
 		this.consistensy = con;
+		if(this.color.equals(Color.WHITE)){
+			this.id="w";
+		}
+		else {
+			this.id="b";
+		}
+		if(this.height.equals(Height.TALL)){
+			this.id.toUpperCase();
+		}
+		if(this.shape.equals(Shape.ROUND)){
+			this.id = "("+this.id+")";
+		}
+		if(this.consistensy.equals(Consistensy.HOLLOW)){
+			this.id = this.id+"*";
+		}
 	}
 
 	public Color getColor() {
@@ -53,8 +69,10 @@ public class Piece {
 	}
 	
 	public String toString(){
-		return "Color: "+this.color.toString()+", Heigth: "+this.height.toString()+", Shape: "+this.shape.toString()+", Consistensy: "+this.consistensy.toString();
+		return this.id;
 	}
+	
+	
 	
 	
 	
