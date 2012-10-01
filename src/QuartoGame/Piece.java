@@ -27,13 +27,22 @@ public class Piece {
 			this.id="b";
 		}
 		if(this.height.equals(Height.TALL)){
-			this.id.toUpperCase();
+			this.id=this.id.toUpperCase();
 		}
 		if(this.shape.equals(Shape.ROUND)){
 			this.id = "("+this.id+")";
 		}
 		if(this.consistensy.equals(Consistensy.HOLLOW)){
 			this.id = this.id+"*";
+		}
+		if(id.length()==1){
+			this.id = " "+this.id+"  ";
+		}
+		else if(id.length()==2){
+			this.id = " "+this.id+" ";
+		}
+		else if(id.length()==3){
+			this.id = this.id+" ";
 		}
 	}
 
@@ -70,6 +79,7 @@ public class Piece {
 	}
 	
 	public String toString(){
+		
 		return this.id;
 	}
 	

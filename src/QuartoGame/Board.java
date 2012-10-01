@@ -1,9 +1,6 @@
 package QuartoGame;
 import java.util.ArrayList;
 
-import com.sun.corba.se.impl.interceptors.PICurrent;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 
 public class Board {
 	
@@ -48,48 +45,95 @@ public class Board {
 			boolean consistensy = true;
 			
 			for (Piece piece : row) {
-				if(!first.getColor().equals(piece.getColor())){
+				if(piece!=null && first != null){
+					if(!first.getColor().equals(piece.getColor())){
+						color = false;
+					}
+					if(!first.getHeight().equals(piece.getHeight())){
+						height = false;
+					}
+					if(!first.getShape().equals(piece.getShape())){
+						shape = false;
+					}
+					if(!first.getConsistensy().equals(piece.getConsistensy())){
+						consistensy = false;
+					}
+				}
+				else{
 					color = false;
-				}
-				if(!first.getHeight().equals(piece.getHeight())){
 					height = false;
-				}
-				if(!first.getShape().equals(piece.getShape())){
 					shape = false;
-				}
-				if(!first.getConsistensy().equals(piece.getConsistensy())){
 					consistensy = false;
 				}
 			}			
-			if(color || height || shape || consistensy){
+			if(color){
+				System.out.println("Row of same color");
 				return true;
 			}
+			else if(height){
+				System.out.println("Row of same height");
+				return true;
+			}
+			else if(shape){
+				System.out.println("Row of same shape");
+				return true;
+			}
+			else if(consistensy){
+				System.out.println("Row of same consistensy");
+				return true;
+			}
+			
+			
+			
 		}
 		
 		for (int i = 0; i < 4; i++) {
 			ArrayList<Piece> col = this.getColumn(i);
+
 			Piece first = col.remove(0);
+			
 			boolean color = true;
 			boolean height = true;
 			boolean shape = true;
 			boolean consistensy = true;
 			
 			for (Piece piece : col) {
-				if(!first.getColor().equals(piece.getColor())){
+				if(piece!=null && first != null){
+					if(!first.getColor().equals(piece.getColor())){
+						color = false;
+					}
+					if(!first.getHeight().equals(piece.getHeight())){
+						height = false;
+					}
+					if(!first.getShape().equals(piece.getShape())){
+						shape = false;
+					}
+					if(!first.getConsistensy().equals(piece.getConsistensy())){
+						consistensy = false;
+					}
+				}
+				else{
 					color = false;
-				}
-				if(!first.getHeight().equals(piece.getHeight())){
 					height = false;
-				}
-				if(!first.getShape().equals(piece.getShape())){
 					shape = false;
-				}
-				if(!first.getConsistensy().equals(piece.getConsistensy())){
 					consistensy = false;
 				}
 			}
 			
-			if(color || height || shape || consistensy){
+			if(color){
+				System.out.println("Column of same color");
+				return true;
+			}
+			else if(height){
+				System.out.println("Column of same height");
+				return true;
+			}
+			else if(shape){
+				System.out.println("Column of same shape");
+				return true;
+			}
+			else if(consistensy){
+				System.out.println("Column of same consistensy");
 				return true;
 			}
 		}
@@ -104,21 +148,42 @@ public class Board {
 				boolean consistensy = true;
 				
 				for (Piece piece : diaR) {
-					if(!first.getColor().equals(piece.getColor())){
+					if(piece!=null && first != null){
+						if(!first.getColor().equals(piece.getColor())){
+							color = false;
+						}
+						if(!first.getHeight().equals(piece.getHeight())){
+							height = false;
+						}
+						if(!first.getShape().equals(piece.getShape())){
+							shape = false;
+						}
+						if(!first.getConsistensy().equals(piece.getConsistensy())){
+							consistensy = false;
+						}
+					}
+					else{
 						color = false;
-					}
-					if(!first.getHeight().equals(piece.getHeight())){
 						height = false;
-					}
-					if(!first.getShape().equals(piece.getShape())){
 						shape = false;
-					}
-					if(!first.getConsistensy().equals(piece.getConsistensy())){
 						consistensy = false;
 					}
 				}
 				
-				if(color || height || shape || consistensy){
+				if(color){
+					System.out.println("Diagonal form left to right of same color");
+					return true;
+				}
+				else if(height){
+					System.out.println("Diagonal form left to right of same height");
+					return true;
+				}
+				else if(shape){
+					System.out.println("Diagonal form left to right of same shape");
+					return true;
+				}
+				else if(consistensy){
+					System.out.println("Diagonal form left to right of same consistensy");
 					return true;
 				}
 			}
@@ -131,23 +196,45 @@ public class Board {
 				boolean consistensy = true;
 				
 				for (Piece piece : diaL) {
-					if(!first.getColor().equals(piece.getColor())){
+					if(piece!=null && first != null){
+						if(!first.getColor().equals(piece.getColor())){
+							color = false;
+						}
+						if(!first.getHeight().equals(piece.getHeight())){
+							height = false;
+						}
+						if(!first.getShape().equals(piece.getShape())){
+							shape = false;
+						}
+						if(!first.getConsistensy().equals(piece.getConsistensy())){
+							consistensy = false;
+						}
+					}
+					else{
 						color = false;
-					}
-					if(!first.getHeight().equals(piece.getHeight())){
 						height = false;
-					}
-					if(!first.getShape().equals(piece.getShape())){
 						shape = false;
-					}
-					if(!first.getConsistensy().equals(piece.getConsistensy())){
 						consistensy = false;
 					}
 				}
 				
-				if(color || height || shape || consistensy){
+				if(color){
+					System.out.println("Diagonal form right to left of same color");
 					return true;
 				}
+				else if(height){
+					System.out.println("Diagonal form left to right of same height");
+					return true;
+				}
+				else if(shape){
+					System.out.println("Diagonal form left to right of same shape");
+					return true;
+				}
+				else if(consistensy){
+					System.out.println("Diagonal form left to right of same consistensy");
+					return true;
+				}
+
 			}
 		}
 		
@@ -164,7 +251,7 @@ public class Board {
 	public void placePiece(int index, Piece piece){
 		if(!this.board.isEmpty()){
 			if(this.board.get(index) == null){
-				this.board.add(index, piece);
+				this.board.set(index, piece);
 				this.pieces.remove(piece);
 			}
 			else{
@@ -190,12 +277,15 @@ public class Board {
 	public ArrayList<Integer> getFreePlaces(){
 		ArrayList<Integer> free = new ArrayList<Integer>();
 		for (int i = 0; i < board.size(); i++) {
+			
 			if(board.get(i)==null){
+				
 				free.add(i);
 			}
 		}
 		return free;
 	}
+	
 
 	public ArrayList<Piece> getBoard() {
 		return board;
@@ -215,9 +305,11 @@ public class Board {
 	
 	public ArrayList<Piece> getColumn(int colNr){
 		ArrayList<Piece> col = new ArrayList<Piece>();
-		for (int i = colNr; i < colNr*4; i+=4) {
-			col.add(board.get(colNr));
+
+		for (int i = colNr; i <= colNr+12; i+=4) {
+			col.add(board.get(i));
 		}
+
 		return col;
 	}
 	
@@ -244,18 +336,33 @@ public class Board {
 		String out = "";
 		for(int i=0; i<16; i++){
 			Piece p = getPiece(i);
-			if(p != null)
-				out += "  " + p.toString();
-			else
-				out += "    ";
-			if(i%3 == 0)
+			if(i%4 == 0)
 				out += "\n";
+			if(p != null)
+				out += "|" + p.toString();
+			else
+				out += "| #  ";
+
 		}
 		
 		return out;
 		
 	}
 	
+	public int possibleWin(Piece piece){
+		
+		for(Integer i: this.getFreePlaces()){
+			Board tempBoard = new Board();
+			tempBoard.setBoard(this.getBoard());
+			tempBoard.placePiece(i, piece);
+//
+//			if(tempBoard.checkForWinner()){
+//				return i;
+//			}
+
+		}
+		return -1;
+	}
 	
 	
 }

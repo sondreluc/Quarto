@@ -24,15 +24,25 @@ public class Game {
 		this.board = board;
 	}
 	
-	public void playTurn(){
+	public void playTurn(boolean log){
+		
 		Piece piece = this.activePlayer.pickPiece(board);
-		this.activePlayer.placePiece(board, piece);
+		if(log){
+			System.out.println("Player #"+this.activePlayer.getPlayerID()+" picks "+piece.toString());
+			
+		}
 		
 		if(this.activePlayer == this.player1)
 			this.activePlayer = this.player2;
 		else
 			this.activePlayer = this.player1;
-			
+		
+		this.activePlayer.placePiece(board, piece);
+		
+		if(log){
+			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place");
+			System.out.println("Player #"+this.activePlayer.getPlayerID()+" places "+piece.toString());	
+		}
 	}
 	
 	public void printBoard(){
@@ -41,31 +51,31 @@ public class Game {
 	}
 	
 	public boolean isFinished(){
-		
 		return board.checkForWinner();
-		
+
 	}
 
 	
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.RANDOM), new Player(PlayerType.RANDOM));
+		Game newGame = new Game(new Player(PlayerType.RANDOM, 1), new Player(PlayerType.RANDOM, 2));
 		
 		boolean finished = false;
 				
 		while(!finished){
-			newGame.playTurn();
+			newGame.playTurn(true);
 			
 			newGame.printBoard();
 			
 			if(newGame.isFinished()){
 				finished = true;
-				break;
+				System.out.println("The winner is: Player #"+newGame.activePlayer.getPlayerID()+"!");
 			}
-			else if(newGame.getBoard().getPieces().size() == 0)
+			else if(newGame.getBoard().getPieces().size() == 0){
 				finished = true;
-					
+				System.out.println("Its a tie!");
+			}	
 			
 		}
 		
