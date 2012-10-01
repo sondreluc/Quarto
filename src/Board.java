@@ -186,7 +186,7 @@ public class Board {
 		}
 	}
 
-	public ArrayList<Integer> freePlaces(){
+	public ArrayList<Integer> getFreePlaces(){
 		ArrayList<Integer> free = new ArrayList<Integer>();
 		for (int i = 0; i < board.size(); i++) {
 			if(board.get(i)==null){
@@ -235,8 +235,24 @@ public class Board {
 		return dia;
 	}
 	
-	public ArrayList<Piece> remainingPieces(){
+	public ArrayList<Piece> getRemainingPieces(){
 		return pieces;
+	}
+	
+	public String printBoard(){
+		String out = "";
+		for(int i=0; i<16; i++){
+			Piece p = getPiece(i);
+			if(p != null)
+				out += "  " + p.toString();
+			else
+				out += "    ";
+			if(i%3 == 0)
+				out += "\n";
+		}
+		
+		return out;
+		
 	}
 	
 	
