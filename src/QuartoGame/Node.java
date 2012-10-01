@@ -1,3 +1,4 @@
+package QuartoGame;
 
 public class Node {
 

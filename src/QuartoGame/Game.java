@@ -1,7 +1,6 @@
-import Player;
+package QuartoGame;
 
-
-
+import QuartoGame.Player.PlayerType;
 
 public class Game {
 	
@@ -27,7 +26,7 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.RANDOM), new Player(PlayerType.RANDOM))
+		Game newGame = new Game(new Player(PlayerType.RANDOM), new Player(PlayerType.RANDOM));
 		
 	}
 
