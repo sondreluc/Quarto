@@ -358,9 +358,9 @@ public class Board {
 			tempBoard.placePiece(i, piece);
 //
 				
-//			if(tempBoard.checkForWinner()){
-//				return i;
-//			}
+			if(tempBoard.checkForWinner()){
+				return i;
+			}
 
 		}
 		return -1;

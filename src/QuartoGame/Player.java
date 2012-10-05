@@ -35,17 +35,21 @@ public class Player {
 					goodPicks.add(p);
 				}
 			}
+			if(goodPicks.size()>0){
+				int i = (int) ((Math.random()*goodPicks.size()));
+				Piece p = goodPicks.get(i);
+				board.getRemainingPieces().remove(p);
+				return p;
+			}
 			
-			int i = (int) ((Math.random()*goodPicks.size()));
-			Piece p = goodPicks.get(i);
-			board.getRemainingPieces().remove(p);
-			
+			ArrayList<Piece> remainingPieces = board.getRemainingPieces();
+			int i = (int) ((Math.random()*remainingPieces.size()));
+			Piece p = remainingPieces.remove(i);
+			board.setPieces(remainingPieces);
 			return p;
+			
 		}
-		
-		
-		
-		
+			
 		return null;
 		
 	}
@@ -59,7 +63,7 @@ public class Player {
 		}
 		
 		else if(playerType==PlayerType.NOVICE){
-			if(board.possibleWin(piece)!= -1){
+			if(board.possibleWin(piece) != -1){
 				board.placePiece(board.possibleWin(piece), piece);
 			}
 			else{
