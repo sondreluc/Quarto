@@ -89,7 +89,7 @@ public class Player {
 	public void miniMaxMove(int depth, Board board, Piece givenPiece){
 		Node root = new Node(board, true, null, givenPiece, true);
 		root.makeTree(depth);
-		root.evaluateNode();
+		root.evaluateNode(depth);
 		
 	}
 	

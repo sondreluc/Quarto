@@ -68,8 +68,8 @@ public class Node {
 	}
 	
 	
-	public int evaluateNode(){
-		if(isTerminal()){
+	public int evaluateNode(int depth){
+		if(isTerminal() || depth <= 0){
 			if(isMax() && this.board.checkForWinner()){
 				this.setValue(100);
 			}
@@ -84,13 +84,13 @@ public class Node {
 		int childvalue = 0; //Usikker på hva denne bør starte på.
 		for(Node n: this.children){
 			if(this.isMax()){
-				if(childvalue < n.evaluateNode()){
-					childvalue = n.evaluateNode();
+				if(childvalue < n.evaluateNode(depth-1)){
+					childvalue = n.evaluateNode(depth-1);
 				}
 			}
 			else{
-				if(childvalue > n.evaluateNode()){
-					childvalue = n.evaluateNode();
+				if(childvalue > n.evaluateNode(depth-1)){
+					childvalue = n.evaluateNode(depth-1);
 				}
 			}
 		}
