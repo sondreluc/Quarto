@@ -30,8 +30,7 @@ public class Board {
 	}
 
 	public void setPieces(ArrayList<Piece> pieces) {
-		pieces.clear();
-		this.pieces.addAll(pieces);
+		this.pieces = pieces;
 	}
 
 	public boolean checkForWinner(){
@@ -357,7 +356,6 @@ public class Board {
 			Board tempBoard = new Board();
 			tempBoard.setBoard(this.getBoard());
 			tempBoard.placePiece(i, piece);
-//
 				
 			if(tempBoard.checkForWinner()){
 				return i;
@@ -371,6 +369,14 @@ public class Board {
 		String str = " ";
 		for(Piece p: getRemainingPieces()){
 			str+=p.toString()+", ";
+		}
+		return str;
+	}
+	
+	public String remainingPositionsToString(){
+		String str = " ";
+		for(Integer i: getFreePlaces()){
+			str+=i.toString()+", ";
 		}
 		return str;
 	}

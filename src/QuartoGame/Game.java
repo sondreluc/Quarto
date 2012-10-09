@@ -39,13 +39,14 @@ public class Game {
 		else
 			this.activePlayer = this.player1;
 		
-		
+		if(log){
+			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place piece "+piece.toString());
+		}
 		
 		this.activePlayer.placePiece(board, piece);
 		
 		if(log){
-			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place");
-			System.out.println("Player #"+this.activePlayer.getPlayerID()+" places "+piece.toString());	
+			System.out.println("Player #"+this.activePlayer.getPlayerID()+" has placed "+piece.toString());	
 		}
 	}
 	
@@ -63,7 +64,7 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.NOVICE, 1), new Player(PlayerType.RANDOM, 2));
+		Game newGame = new Game(new Player(PlayerType.NOVICE, 1), new Player(PlayerType.NOVICE, 2));
 		
 		boolean finished = false;
 				
