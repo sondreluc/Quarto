@@ -35,7 +35,7 @@ public class Node {
 		this.board = board;
 	}
 
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 
@@ -68,34 +68,19 @@ public class Node {
 	}
 	
 	
-	public int evaluateNode(int depth){
-		if(isTerminal() || depth <= 0){
-			if(isMax() && this.board.checkForWinner()){
-				this.setValue(100);
-			}
-			else if( this.board.checkForWinner()){
-				this.setValue(-100);
-			}
-			else{
-				this.setValue(0);
-			}
-			return this.value;
+	public int evaluateNode(){
+	
+		if(isMax() && this.board.checkForWinner()){
+			this.setValue(100);
 		}
-		int childvalue = 0; //Usikker på hva denne bør starte på.
-		for(Node n: this.children){
-			if(this.isMax()){
-				if(childvalue < n.evaluateNode(depth-1)){
-					childvalue = n.evaluateNode(depth-1);
-				}
-			}
-			else{
-				if(childvalue > n.evaluateNode(depth-1)){
-					childvalue = n.evaluateNode(depth-1);
-				}
-			}
+		else if( this.board.checkForWinner()){
+			this.setValue(-100);
 		}
-		this.setValue(childvalue);
+		else{
+			this.setValue(0);
+		}
 		return this.value;
+	
 	}
 
 	public boolean isTerminal() {
@@ -133,25 +118,56 @@ public class Node {
 		this.root = root;
 	}
 	
-	public void makeTree(int depth){
-		if(depth > 0){
+	public int alphabetaprun(int depth, int min, int max){
+		if(depth == 0 || this.isTerminal()){
+			return this.evaluateNode();
+		}
+		else{
+
 			Board newBoard = new Board();
-			for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
-				newBoard.setBoard(this.board.getBoard());
-				newBoard.setPieces(this.board.getPieces());
-				newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
-				for(Piece p: newBoard.getRemainingPieces()){
-					if(this.isMax()){
+			if(this.isMax()){
+				int value = min;
+
+				for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
+					newBoard.setBoard(this.board.getBoard());
+					newBoard.setPieces(this.board.getPieces());
+					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
+					for(Piece p: newBoard.getRemainingPieces()){
+						
 						Node newNode = new Node(newBoard, false, this, p, false);
-						newNode.makeTree(depth-1);
-						this.children.add(newNode);
-					}
-					else{
-						Node newNode = new Node(newBoard, true, this, p, false);
-						newNode.makeTree(depth-1);
-						this.children.add(newNode);
+						int tempVal = newNode.alphabetaprun(depth-1, value, max);
+						if(tempVal > value){
+							value = tempVal;
+						}
+						if(value > max){
+							this.setValue(max);
+							return max;
+						}
 					}
 				}
+				return value;
+			}
+			else{
+				int value = max;
+
+				for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
+					newBoard.setBoard(this.board.getBoard());
+					newBoard.setPieces(this.board.getPieces());
+					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
+					for(Piece p: newBoard.getRemainingPieces()){
+						
+						Node newNode = new Node(newBoard, false, this, p, false);
+						int tempVal = newNode.alphabetaprun(depth-1, min, value);
+						if(tempVal < value){
+							value = tempVal;
+						}
+						if(value < min){
+							this.setValue(min);
+							return min;
+						}
+					}
+				}
+				return value;
 			}
 		}
 	}

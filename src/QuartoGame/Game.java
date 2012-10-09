@@ -1,5 +1,7 @@
 package QuartoGame;
 
+import java.util.Scanner;
+
 import QuartoGame.Player.PlayerType;
 
 public class Game {
@@ -24,14 +26,13 @@ public class Game {
 		this.board = board;
 	}
 	
-	public void playTurn(boolean log){
+	public void playTurn(boolean log, Scanner scanner){
 		
-		Piece piece = this.activePlayer.pickPiece(board);
+		Piece piece = this.activePlayer.pickPiece(board, scanner);
 		if(log){
 			System.out.println();
 			System.out.println("Remainding pieces:"+board.remainingToSting());
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" picks "+piece.toString());
-			
 		}
 		
 		if(this.activePlayer == this.player1)
@@ -43,7 +44,7 @@ public class Game {
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place piece "+piece.toString());
 		}
 		
-		this.activePlayer.placePiece(board, piece);
+		this.activePlayer.placePiece(board, piece, scanner);
 		
 		if(log){
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" has placed "+piece.toString());	
@@ -67,9 +68,11 @@ public class Game {
 		Game newGame = new Game(new Player(PlayerType.NOVICE, 1), new Player(PlayerType.NOVICE, 2));
 		
 		boolean finished = false;
-				
+		
+		Scanner scanner = new Scanner(System.in);
+		
 		while(!finished){
-			newGame.playTurn(true);
+			newGame.playTurn(true, scanner);
 			
 			newGame.printBoard();
 			

@@ -18,7 +18,7 @@ public class Player {
 	}
 	
 	
-	public Piece pickPiece(Board board){
+	public Piece pickPiece(Board board, Scanner scanner){
 		
 		if(playerType==PlayerType.RANDOM){
 			ArrayList<Piece> remainingPieces = board.getRemainingPieces();
@@ -53,24 +53,25 @@ public class Player {
 		}
 		
 		else if(playerType == PlayerType.HUMAN){
-			System.out.println("These are the remainding pieces:"+board.remainingToSting());
 			
-			Scanner scan = new Scanner(System.in);
-			scan.reset();
+			System.out.println("These are the remainding pieces:"+board.remainingToSting());
 			System.out.println("Pick a piece for your opponent by writing the index of the piece(zero-indexed):");
-			String index = scan.nextLine();
-			ArrayList<Piece> remainingPieces = new ArrayList<Piece>();
-			remainingPieces.addAll(board.getRemainingPieces());
-			if((Integer.parseInt(index) >=0 && remainingPieces.size()>(Integer.parseInt(index)))){
-				Piece p = remainingPieces.remove(Integer.parseInt(index));
-				board.setPieces(remainingPieces);
-				scan.close();
-				return p;
-			}
-			else{
-				System.out.println("You entered an invalid index!");
-				scan.close();
-				return this.pickPiece(board);
+			boolean placed = false;
+			while(scanner.hasNextInt() && !placed){
+				int index = scanner.nextInt();
+				ArrayList<Piece> remainingPieces = new ArrayList<Piece>();
+				remainingPieces.addAll(board.getRemainingPieces());
+				if(index >=0 && remainingPieces.size() > index ){
+					Piece p = remainingPieces.remove(index);
+					board.setPieces(remainingPieces);
+					placed=true;
+					return p;
+				}
+				else{
+					System.out.println("You entered an invalid index!");
+					placed=true;
+					return this.pickPiece(board, scanner);
+				}
 			}
 		}
 			
@@ -78,7 +79,7 @@ public class Player {
 		
 	}
 	
-	public void placePiece(Board board, Piece piece){
+	public void placePiece(Board board, Piece piece, Scanner scanner){
 		if(playerType==PlayerType.RANDOM){
 			ArrayList<Integer> places = board.getFreePlaces();
 			
@@ -98,25 +99,24 @@ public class Player {
 		}
 		else if(playerType==PlayerType.HUMAN){
 			
-			Scanner scan = new Scanner(System.in);
-			scan.reset();
 			System.out.println("You are to place "+piece.toString());
 			System.out.println("This is the board:");
 			
 			System.out.println(board.printBoard()+"\n");
-			
 			System.out.println("The available positions are:"+board.remainingPositionsToString());
 			System.out.println("Enter the position you want to place your piece");
-			String position = scan.nextLine();
-			int pos = Integer.parseInt(position);
-			if(board.getFreePlaces().contains((Integer)pos)){
-				board.placePiece(pos, piece);
+			boolean placed = false;
+			while(scanner.hasNextInt() && !placed){
+				int pos = scanner.nextInt();
+				if(board.getFreePlaces().contains(pos)){
+					board.placePiece(pos, piece);
+					placed = true;
+				}
+				else{
+					System.out.println("Entered position is not free or does not exsist!");
+					this.placePiece(board, piece, scanner);
+				}
 			}
-			else{
-				System.out.println("Entered position is not free or does not exsist!");
-				this.placePiece(board, piece);
-			}
-			scan.close();
 			
 		}
 	}
@@ -134,8 +134,7 @@ public class Player {
 
 	public void miniMaxMove(int depth, Board board, Piece givenPiece){
 		Node root = new Node(board, true, null, givenPiece, true);
-		root.makeTree(depth);
-		root.evaluateNode(depth);
+		root.alphabetaprun(depth, -999999999, 999999999);
 		
 	}
 	
