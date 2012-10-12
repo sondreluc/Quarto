@@ -8,6 +8,7 @@ public class Node {
 	private Board board;
 	private Piece givenPiece;
 	private Piece pickedPiece;
+	private int placementIndex;
 	private int value;
 	private boolean max;
 	private ArrayList<Node> children;
@@ -25,6 +26,7 @@ public class Node {
 		this.givenPiece = given;
 		this.pickedPiece = null;
 		this.root = root;
+		this.placementIndex = 0;
 	}
 
 	public Board getBoard() {
@@ -70,10 +72,10 @@ public class Node {
 	
 	public int evaluateNode(){
 	
-		if(isMax() && this.board.checkForWinner()){
+		if(isMax() && this.board.checkForWinner(false)){
 			this.setValue(100);
 		}
-		else if( this.board.checkForWinner()){
+		else if( this.board.checkForWinner(false)){
 			this.setValue(-100);
 		}
 		else{
@@ -88,7 +90,7 @@ public class Node {
 	}
 
 	public void setTerminal() {
-		if(this.board.checkForWinner() || this.board.getFreePlaces().size()==0){
+		if(this.board.checkForWinner(false) || this.board.getFreePlaces().size()==0){
 			this.terminal = true;
 		}
 		this.terminal = false;
@@ -120,10 +122,12 @@ public class Node {
 	
 	public int alphabetaprun(int depth, int min, int max){
 		if(depth == 0 || this.isTerminal()){
+			System.out.println("here");
 			return this.evaluateNode();
+			
 		}
 		else{
-
+			
 			Board newBoard = new Board();
 			if(this.isMax()){
 				int value = min;
@@ -132,9 +136,12 @@ public class Node {
 					newBoard.setBoard(this.board.getBoard());
 					newBoard.setPieces(this.board.getPieces());
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
-					for(Piece p: newBoard.getRemainingPieces()){
+					ArrayList<Piece> rem = new ArrayList<Piece>();
+					rem.addAll(newBoard.getRemainingPieces());
+					for(Piece p: rem){
 						
 						Node newNode = new Node(newBoard, false, this, p, false);
+						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, value, max);
 						if(tempVal > value){
 							value = tempVal;
@@ -154,9 +161,12 @@ public class Node {
 					newBoard.setBoard(this.board.getBoard());
 					newBoard.setPieces(this.board.getPieces());
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
-					for(Piece p: newBoard.getRemainingPieces()){
+					ArrayList<Piece> rem = new ArrayList<Piece>();
+					rem.addAll(newBoard.getRemainingPieces());
+					for(Piece p: rem){
 						
 						Node newNode = new Node(newBoard, false, this, p, false);
+						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, min, value);
 						if(tempVal < value){
 							value = tempVal;
@@ -170,6 +180,14 @@ public class Node {
 				return value;
 			}
 		}
+	}
+
+	public int getPlacementIndex() {
+		return placementIndex;
+	}
+
+	public void setPlacementIndex(int placementIndex) {
+		this.placementIndex = placementIndex;
 	}
 	
 }

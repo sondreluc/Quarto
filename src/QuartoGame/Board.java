@@ -6,6 +6,7 @@ public class Board {
 	
 	private ArrayList<Piece> board;
 	private ArrayList<Piece> pieces;
+	private Piece activePiece;
 	
 
 	public Board(){
@@ -33,7 +34,7 @@ public class Board {
 		this.pieces = pieces;
 	}
 
-	public boolean checkForWinner(){
+	public boolean checkForWinner(boolean log){
 		
 		for (int i = 0; i < 4; i++) {
 			ArrayList<Piece> row = this.getRow(i);
@@ -67,19 +68,23 @@ public class Board {
 				}
 			}			
 			if(color){
-				System.out.println("Row of same color");
+				if(log)
+					System.out.println("Row of same color");
 				return true;
 			}
 			else if(height){
-				System.out.println("Row of same height");
+				if(log)
+					System.out.println("Row of same height");
 				return true;
 			}
 			else if(shape){
-				System.out.println("Row of same shape");
+				if(log)
+					System.out.println("Row of same shape");
 				return true;
 			}
 			else if(consistensy){
-				System.out.println("Row of same consistensy");
+				if(log)
+					System.out.println("Row of same consistensy");
 				return true;
 			}
 			
@@ -121,19 +126,23 @@ public class Board {
 			}
 			
 			if(color){
-				System.out.println("Column of same color");
+				if(log)
+					System.out.println("Column of same color");
 				return true;
 			}
 			else if(height){
-				System.out.println("Column of same height");
+				if(log)
+					System.out.println("Column of same height");
 				return true;
 			}
 			else if(shape){
-				System.out.println("Column of same shape");
+				if(log)
+					System.out.println("Column of same shape");
 				return true;
 			}
 			else if(consistensy){
-				System.out.println("Column of same consistensy");
+				if(log)
+					System.out.println("Column of same consistensy");
 				return true;
 			}
 		}
@@ -171,19 +180,23 @@ public class Board {
 				}
 				
 				if(color){
-					System.out.println("Diagonal form left to right of same color");
+					if(log)
+						System.out.println("Diagonal form left to right of same color");
 					return true;
 				}
 				else if(height){
-					System.out.println("Diagonal form left to right of same height");
+					if(log)
+						System.out.println("Diagonal form left to right of same height");
 					return true;
 				}
 				else if(shape){
-					System.out.println("Diagonal form left to right of same shape");
+					if(log)
+						System.out.println("Diagonal form left to right of same shape");
 					return true;
 				}
 				else if(consistensy){
-					System.out.println("Diagonal form left to right of same consistensy");
+					if(log)
+						System.out.println("Diagonal form left to right of same consistensy");
 					return true;
 				}
 			}
@@ -219,19 +232,23 @@ public class Board {
 				}
 				
 				if(color){
-					System.out.println("Diagonal form right to left of same color");
+					if(log)
+						System.out.println("Diagonal form right to left of same color");
 					return true;
 				}
 				else if(height){
-					System.out.println("Diagonal form left to right of same height");
+					if(log)
+						System.out.println("Diagonal form left to right of same height");
 					return true;
 				}
 				else if(shape){
-					System.out.println("Diagonal form left to right of same shape");
+					if(log)
+						System.out.println("Diagonal form left to right of same shape");
 					return true;
 				}
 				else if(consistensy){
-					System.out.println("Diagonal form left to right of same consistensy");
+					if(log)
+						System.out.println("Diagonal form left to right of same consistensy");
 					return true;
 				}
 
@@ -357,7 +374,7 @@ public class Board {
 			tempBoard.setBoard(this.getBoard());
 			tempBoard.placePiece(i, piece);
 				
-			if(tempBoard.checkForWinner()){
+			if(tempBoard.checkForWinner(false)){
 				return i;
 			}
 
@@ -379,6 +396,14 @@ public class Board {
 			str+=i.toString()+", ";
 		}
 		return str;
+	}
+
+	public Piece getActivePiece() {
+		return activePiece;
+	}
+
+	public void setActivePiece(Piece activePiece) {
+		this.activePiece = activePiece;
 	}
 	
 	

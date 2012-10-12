@@ -5,20 +5,23 @@ import java.util.Scanner;
 
 
 
+
 public class Player {
 	public enum PlayerType{RANDOM, NOVICE, HUMAN, MINIMAX3, MINIMAX4};
 	private PlayerType playerType;
 	private int playerID;
+	private Piece bestPick;
 	
 	
 	public Player(PlayerType pType, int id){
 		this.playerType = pType;
 		this.playerID = id;
+		this.bestPick = null;
 		
 	}
 	
 	
-	public Piece pickPiece(Board board, Scanner scanner){
+	public Piece pickPiece(Board board, Scanner scanner, boolean doMiniMax){
 		
 		if(playerType==PlayerType.RANDOM){
 			ArrayList<Piece> remainingPieces = board.getRemainingPieces();
@@ -28,7 +31,7 @@ public class Player {
 			return p;
 		}
 		
-		else if(playerType==PlayerType.NOVICE){
+		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAX3&&!doMiniMax)){
 			ArrayList<Piece> goodPicks = new ArrayList<Piece>();
 			ArrayList<Piece> temp =  new ArrayList<Piece>();
 			temp.addAll(board.getRemainingPieces());
@@ -52,6 +55,16 @@ public class Player {
 			
 		}
 		
+		else if(playerType == PlayerType.MINIMAX3 && doMiniMax){
+			if(bestPick!=null){
+				board.getRemainingPieces().remove(bestPick);
+				return bestPick;
+			}
+			else{
+				return pickPiece(board, scanner, !doMiniMax);
+			}
+		}
+		
 		else if(playerType == PlayerType.HUMAN){
 			
 			System.out.println("These are the remainding pieces:"+board.remainingToSting());
@@ -70,7 +83,7 @@ public class Player {
 				else{
 					System.out.println("You entered an invalid index!");
 					placed=true;
-					return this.pickPiece(board, scanner);
+					return this.pickPiece(board, scanner, doMiniMax);
 				}
 			}
 		}
@@ -79,7 +92,7 @@ public class Player {
 		
 	}
 	
-	public void placePiece(Board board, Piece piece, Scanner scanner){
+	public void placePiece(Board board, Piece piece, Scanner scanner, boolean doMiniMax){
 		if(playerType==PlayerType.RANDOM){
 			ArrayList<Integer> places = board.getFreePlaces();
 			
@@ -87,7 +100,7 @@ public class Player {
 			board.placePiece((int)places.get(i), piece);
 		}
 		
-		else if(playerType==PlayerType.NOVICE){
+		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAX3&&!doMiniMax)){
 			if(board.possibleWin(piece) != -1){
 				board.placePiece(board.possibleWin(piece), piece);
 			}
@@ -97,6 +110,16 @@ public class Player {
 				board.placePiece((int)places.get(i), piece);
 			}
 		}
+		
+		else if(playerType == PlayerType.MINIMAX3 && doMiniMax){
+			Node node = this.miniMaxMove(3, board, piece);
+			board.placePiece(node.getPlacementIndex(), node.getGivenPiece());
+			this.setBestPick(node.getPickedPiece());
+		}
+		else if(playerType == PlayerType.MINIMAX4){
+			
+		}
+		
 		else if(playerType==PlayerType.HUMAN){
 			
 			System.out.println("You are to place "+piece.toString());
@@ -114,7 +137,7 @@ public class Player {
 				}
 				else{
 					System.out.println("Entered position is not free or does not exsist!");
-					this.placePiece(board, piece, scanner);
+					this.placePiece(board, piece, scanner, doMiniMax);
 				}
 			}
 			
@@ -132,12 +155,29 @@ public class Player {
 		this.playerID = playerID;
 	}
 
-	public void miniMaxMove(int depth, Board board, Piece givenPiece){
+	public Node miniMaxMove(int depth, Board board, Piece givenPiece){
 		Node root = new Node(board, true, null, givenPiece, true);
 		root.alphabetaprun(depth, -999999999, 999999999);
+		Node best = root.getChildren().remove(0);
+		double bestValue = best.getValue();
+		for(Node child : root.getChildren()){
+			if(child.getValue()>bestValue){
+				bestValue = child.getValue();
+				best = child;
+			}
+		}
 		
+		return best;
 	}
-	
-	
+
+
+	public Piece getBestPick() {
+		return bestPick;
+	}
+
+
+	public void setBestPick(Piece bestPick) {
+		this.bestPick = bestPick;
+	}
 	
 }

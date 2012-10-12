@@ -26,9 +26,10 @@ public class Game {
 		this.board = board;
 	}
 	
-	public void playTurn(boolean log, Scanner scanner){
+	public void playTurn(boolean log, Scanner scanner, boolean doMiniMax){
 		
-		Piece piece = this.activePlayer.pickPiece(board, scanner);
+		Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
+		this.board.setActivePiece(piece);
 		if(log){
 			System.out.println();
 			System.out.println("Remainding pieces:"+board.remainingToSting());
@@ -44,11 +45,12 @@ public class Game {
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place piece "+piece.toString());
 		}
 		
-		this.activePlayer.placePiece(board, piece, scanner);
+		this.activePlayer.placePiece(board, piece, scanner, doMiniMax);
 		
 		if(log){
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" has placed "+piece.toString());	
 		}
+		
 	}
 	
 	public void printBoard(){
@@ -57,7 +59,7 @@ public class Game {
 	}
 	
 	public boolean isFinished(){
-		return board.checkForWinner();
+		return board.checkForWinner(true);
 
 	}
 
@@ -65,28 +67,50 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.NOVICE, 1), new Player(PlayerType.NOVICE, 2));
+		Game newGame = new Game(new Player(PlayerType.MINIMAX3, 1), new Player(PlayerType.NOVICE, 2));
 		
 		boolean finished = false;
 		
 		Scanner scanner = new Scanner(System.in);
+		int count = 1;
 		
 		while(!finished){
-			newGame.playTurn(true, scanner);
-			
-			newGame.printBoard();
-			
-			if(newGame.isFinished()){
-				finished = true;
-				System.out.println("The winner is: Player #"+newGame.activePlayer.getPlayerID()+"!");
+			if(count<9){
+				System.out.println();
+				System.out.println("Round: "+count);
+				newGame.playTurn(true, scanner, false);
+				
+				newGame.printBoard();
+				
+				if(newGame.isFinished()){
+					System.out.println();
+					finished = true;
+					System.out.println("The winner is: Player #"+newGame.activePlayer.getPlayerID()+"!");
+				}
+				else if(newGame.getBoard().getPieces().size() == 0){
+					finished = true;
+					System.out.println("Its a tie!");
+				}	
 			}
-			else if(newGame.getBoard().getPieces().size() == 0){
-				finished = true;
-				System.out.println("Its a tie!");
-			}	
-			
-		}
-		
+			else{
+				System.out.println();
+				System.out.println("Round: "+count);
+				newGame.playTurn(true, scanner, true);
+				
+				newGame.printBoard();
+				
+				if(newGame.isFinished()){
+					System.out.println();
+					finished = true;
+					System.out.println("The winner is: Player #"+newGame.activePlayer.getPlayerID()+"!");
+				}
+				else if(newGame.getBoard().getPieces().size() == 0){
+					finished = true;
+					System.out.println("Its a tie!");
+				}	
+			}
+			count++;
+		}	
 	}
 
 }
