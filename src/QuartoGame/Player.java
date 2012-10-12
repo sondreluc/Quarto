@@ -92,7 +92,7 @@ public class Player {
 		
 	}
 	
-	public void placePiece(Board board, Piece piece, Scanner scanner, boolean doMiniMax){
+	public void placePiece(Board board, Piece piece, Scanner scanner, boolean doMiniMax, boolean wrongPick){
 		if(playerType==PlayerType.RANDOM){
 			ArrayList<Integer> places = board.getFreePlaces();
 			
@@ -122,22 +122,26 @@ public class Player {
 		
 		else if(playerType==PlayerType.HUMAN){
 			
-			System.out.println("You are to place "+piece.toString());
-			System.out.println("This is the board:");
-			
-			System.out.println(board.printBoard()+"\n");
+			if(!wrongPick){
+				System.out.println("You are to place "+piece.toString());
+				System.out.println("This is the board:");
+				System.out.println(board.printBoard()+"\n");
+			}
 			System.out.println("The available positions are:"+board.remainingPositionsToString());
 			System.out.println("Enter the position you want to place your piece");
 			boolean placed = false;
 			while(scanner.hasNextInt() && !placed){
 				int pos = scanner.nextInt();
 				if(board.getFreePlaces().contains(pos)){
+					System.out.println("success");
 					board.placePiece(pos, piece);
 					placed = true;
+					break;
 				}
 				else{
-					System.out.println("Entered position is not free or does not exsist!");
-					this.placePiece(board, piece, scanner, doMiniMax);
+					System.out.println("Entered position is not free or does not exist! Pick another one");
+					this.placePiece(board, piece, scanner, doMiniMax, true);
+					break;
 				}
 			}
 			
