@@ -156,6 +156,9 @@ public class Player {
 	}
 
 	public Node miniMaxMove(int depth, Board board, Piece givenPiece){
+		Board copy = new Board();
+		copy.setBoard(board.getBoard());
+		copy.setPieces(board.getPieces());
 		Node root = new Node(board, true, null, givenPiece, true);
 		root.alphabetaprun(depth, -999999999, 999999999);
 		Node best = root.getChildren().remove(0);

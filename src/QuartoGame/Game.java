@@ -105,6 +105,8 @@ public class Game {
 					System.out.println("The winner is: Player #"+newGame.activePlayer.getPlayerID()+"!");
 				}
 				else if(newGame.getBoard().getPieces().size() == 0){
+					System.out.println("FreePlaces: "+newGame.getBoard().getFreePlaces());
+					System.out.println("RemainingPieces: "+newGame.getBoard().getPieces().size());
 					finished = true;
 					System.out.println("Its a tie!");
 				}	

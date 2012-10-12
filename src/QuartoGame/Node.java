@@ -122,27 +122,31 @@ public class Node {
 	
 	public int alphabetaprun(int depth, int min, int max){
 		if(depth == 0 || this.isTerminal()){
-			System.out.println("here");
+			
 			return this.evaluateNode();
 			
 		}
 		else{
 			
 			Board newBoard = new Board();
+			System.out.println("before set:"+this.board.getRemainingPieces().size());
+			newBoard.setBoard(this.board.getBoard());
+			newBoard.setPieces(this.board.getPieces());
+			
 			if(this.isMax()){
 				int value = min;
 
 				for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
-					newBoard.setBoard(this.board.getBoard());
-					newBoard.setPieces(this.board.getPieces());
-					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
 					ArrayList<Piece> rem = new ArrayList<Piece>();
-					rem.addAll(newBoard.getRemainingPieces());
+					rem.addAll(this.board.getRemainingPieces());
+					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
+
 					for(Piece p: rem){
 						
 						Node newNode = new Node(newBoard, false, this, p, false);
 						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, value, max);
+						this.getChildren().add(newNode);
 						if(tempVal > value){
 							value = tempVal;
 						}
@@ -157,7 +161,7 @@ public class Node {
 			else{
 				int value = max;
 
-				for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
+				for (int i = 0; i < this.board.getFreePlaces().size(); i++) {
 					newBoard.setBoard(this.board.getBoard());
 					newBoard.setPieces(this.board.getPieces());
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
@@ -168,6 +172,7 @@ public class Node {
 						Node newNode = new Node(newBoard, false, this, p, false);
 						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, min, value);
+						this.getChildren().add(newNode);
 						if(tempVal < value){
 							value = tempVal;
 						}
