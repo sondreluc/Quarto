@@ -28,11 +28,14 @@ public class Game {
 	
 	public void playTurn(boolean log, Scanner scanner, boolean doMiniMax){
 		
+		if(log){
+			System.out.println();
+			//System.out.println("Remaining pieces:"+board.remainingToSting());
+		}
+		
 		Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
 		this.board.setActivePiece(piece);
 		if(log){
-			System.out.println();
-			System.out.println("Remainding pieces:"+board.remainingToSting());
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" picks "+piece.toString());
 		}
 		
@@ -45,7 +48,7 @@ public class Game {
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place piece "+piece.toString());
 		}
 		
-		this.activePlayer.placePiece(board, piece, scanner, doMiniMax);
+		this.activePlayer.placePiece(board, piece, scanner, doMiniMax, false);
 		
 		if(log){
 			System.out.println("Player #"+this.activePlayer.getPlayerID()+" has placed "+piece.toString());	
@@ -67,7 +70,7 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.MINIMAX3, 1), new Player(PlayerType.NOVICE, 2));
+		Game newGame = new Game(new Player(PlayerType.HUMAN, 1), new Player(PlayerType.HUMAN, 2));
 		
 		boolean finished = false;
 		
