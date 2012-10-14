@@ -71,7 +71,6 @@ public class Node {
 	
 	
 	public int evaluateNode(){
-	
 		if(!isMax() && this.board.checkForWinner(false)){
 			this.setValue(100);
 		}
@@ -93,7 +92,6 @@ public class Node {
 		if(this.board.checkForWinner(false) || this.board.getFreePlaces().size()==0){
 			this.terminal = true;
 		}
-		this.terminal = false;
 	}
 
 	public Piece getPickedPiece() {
@@ -126,15 +124,13 @@ public class Node {
 		
 		if(depth == 0 || this.isTerminal()){
 			
-			System.out.println("Eval:" + this.evaluateNode());
-			
 			return this.evaluateNode();
 			
 		}
 		else{
 						
 			if(this.isMax()){
-				System.out.println("Max");
+				
 				int value = min;
 				
 				int size = this.board.getFreePlaces().size();
@@ -145,22 +141,21 @@ public class Node {
 					newBoard.setBoard(this.board.getBoard());
 					newBoard.setPieces(this.board.getPieces());
 					
-					int placementIndex = newBoard.getFreePlaces().get(i);
-										
+					int placementIndex = newBoard.getFreePlaces().get(i);	
 					ArrayList<Piece> rem = new ArrayList<Piece>();
 					rem.addAll(newBoard.getRemainingPieces());
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
-					
+
 					for(Piece p: rem){
 						
 						Node newNode = new Node(newBoard, false, this, p, false, placementIndex);
-						
-						int tempVal = newNode.alphabetaprun(depth-1, value, max);
+						newNode.setPickedPiece(p);
 						this.getChildren().add(newNode);
+						int tempVal = newNode.alphabetaprun(depth-1, value, max);
 						if(tempVal > value){
 							value = tempVal;
 							this.setValue(value);
-							this.setPlacementIndex(newNode.getPlacementIndex());
+							
 						}
 						if(value >= max){
 							return value;
@@ -170,7 +165,6 @@ public class Node {
 				return value;
 			}
 			else{
-				System.out.println("Min");
 				int value = max;
 				
 				int size = this.board.getFreePlaces().size();
@@ -188,16 +182,17 @@ public class Node {
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
 					
 					for(Piece p: rem){
-						this.setPickedPiece(p);
 						Node newNode = new Node(newBoard, true, this, p, false, placementIndex);
-						int tempVal = newNode.alphabetaprun(depth-1, min, value);
+						newNode.setPickedPiece(p);
 						this.getChildren().add(newNode);
+						int tempVal = newNode.alphabetaprun(depth-1, min, value);
 						if(tempVal < value){
 							value = tempVal;
+							this.setValue(value);
+							
 						}
 						if(value <= min){
-							this.setValue(value);
-							this.setPlacementIndex(newNode.getPlacementIndex());
+
 							return value;
 						}
 					}
