@@ -121,7 +121,7 @@ public class Node {
 	}
 	
 	public int alphabetaprun(int depth, int min, int max){
-				
+		
 		this.setTerminal();
 		
 		if(depth == 0 || this.isTerminal()){
@@ -134,6 +134,7 @@ public class Node {
 		else{
 						
 			if(this.isMax()){
+				System.out.println("Max");
 				int value = min;
 				
 				int size = this.board.getFreePlaces().size();
@@ -169,6 +170,7 @@ public class Node {
 				return value;
 			}
 			else{
+				System.out.println("Min");
 				int value = max;
 				
 				int size = this.board.getFreePlaces().size();
@@ -188,7 +190,6 @@ public class Node {
 					for(Piece p: rem){
 						this.setPickedPiece(p);
 						Node newNode = new Node(newBoard, true, this, p, false, placementIndex);
-						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, min, value);
 						this.getChildren().add(newNode);
 						if(tempVal < value){

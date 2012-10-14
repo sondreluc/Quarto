@@ -114,6 +114,7 @@ public class Player {
 		else if(playerType == PlayerType.MINIMAX3 && doMiniMax){
 						
 			Node node = this.miniMaxMove(3, board, piece);
+			System.out.println(node.getPlacementIndex());
 			board.placePiece(node.getPlacementIndex(), piece);
 			this.setBestPick(node.getPickedPiece());
 		}
@@ -175,6 +176,7 @@ public class Player {
 			Node best = root.getChildren().remove(0);
 			double bestValue = best.getValue();
 			for(Node child : root.getChildren()){
+				System.out.println(child.getPlacementIndex());
 				//System.out.println(child.getValue());
 				if(child.getValue()>bestValue){
 					bestValue = child.getValue();
@@ -182,7 +184,7 @@ public class Player {
 					this.setBestPick(child.getGivenPiece());
 				}
 			}
-			
+			System.out.println(best.getPlacementIndex());
 			return best;
 		}
 	}
