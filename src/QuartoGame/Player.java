@@ -50,7 +50,7 @@ public class Player {
 			ArrayList<Piece> remainingPieces = board.getRemainingPieces();
 			int i = (int) ((Math.random()*remainingPieces.size()));
 			Piece p = remainingPieces.remove(i);
-			board.setPieces(remainingPieces);
+			board.getRemainingPieces().remove(p);
 			return p;
 			
 		}
@@ -112,8 +112,9 @@ public class Player {
 		}
 		
 		else if(playerType == PlayerType.MINIMAX3 && doMiniMax){
+						
 			Node node = this.miniMaxMove(3, board, piece);
-			board.placePiece(node.getPlacementIndex(), node.getGivenPiece());
+			board.placePiece(node.getPlacementIndex(), piece);
 			this.setBestPick(node.getPickedPiece());
 		}
 		else if(playerType == PlayerType.MINIMAX4){
@@ -163,18 +164,26 @@ public class Player {
 		Board copy = new Board();
 		copy.setBoard(board.getBoard());
 		copy.setPieces(board.getPieces());
-		Node root = new Node(board, true, null, givenPiece, true);
+	
+		Node root = new Node(copy, true, null, givenPiece, true, 0);
 		root.alphabetaprun(depth, -999999999, 999999999);
-		Node best = root.getChildren().remove(0);
-		double bestValue = best.getValue();
-		for(Node child : root.getChildren()){
-			if(child.getValue()>bestValue){
-				bestValue = child.getValue();
-				best = child;
-			}
-		}
 		
-		return best;
+		if(root.isTerminal()){
+			return root;
+		}
+		else {
+			Node best = root.getChildren().remove(0);
+			double bestValue = best.getValue();
+			for(Node child : root.getChildren()){
+				if(child.getValue()>bestValue){
+					bestValue = child.getValue();
+					best = child;
+					this.setBestPick(child.getGivenPiece());
+				}
+			}
+			
+			return best;
+		}
 	}
 
 

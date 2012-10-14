@@ -16,7 +16,7 @@ public class Node {
 	private boolean terminal;
 	private boolean root;
 	
-	public Node(Board board, boolean maxOrMin, Node parent, Piece given, boolean root){
+	public Node(Board board, boolean maxOrMin, Node parent, Piece given, boolean root, int placement){
 		this.board = board;
 		this.value = 0;
 		this.max = maxOrMin;
@@ -26,7 +26,7 @@ public class Node {
 		this.givenPiece = given;
 		this.pickedPiece = null;
 		this.root = root;
-		this.placementIndex = 0;
+		this.placementIndex = placement;
 	}
 
 	public Board getBoard() {
@@ -72,10 +72,10 @@ public class Node {
 	
 	public int evaluateNode(){
 	
-		if(isMax() && this.board.checkForWinner(false)){
+		if(!isMax() && this.board.checkForWinner(false)){
 			this.setValue(100);
 		}
-		else if( this.board.checkForWinner(false)){
+		else if(isMax() && this.board.checkForWinner(false)){
 			this.setValue(-100);
 		}
 		else{
@@ -121,38 +121,47 @@ public class Node {
 	}
 	
 	public int alphabetaprun(int depth, int min, int max){
+				
+		this.setTerminal();
+		
 		if(depth == 0 || this.isTerminal()){
 			
 			return this.evaluateNode();
 			
 		}
 		else{
-			
+						
 			Board newBoard = new Board();
-			System.out.println("before set:"+this.board.getRemainingPieces().size());
+
 			newBoard.setBoard(this.board.getBoard());
 			newBoard.setPieces(this.board.getPieces());
+
+			
 			
 			if(this.isMax()){
 				int value = min;
 
-				for (int i = 0; i < newBoard.getFreePlaces().size(); i++) {
+				for (int i = 0; i < newBoard.getFreePlaces().size() - 1; i++) {
+										
 					ArrayList<Piece> rem = new ArrayList<Piece>();
-					rem.addAll(this.board.getRemainingPieces());
+					rem.addAll(newBoard.getRemainingPieces());
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
-
+					
 					for(Piece p: rem){
 						
-						Node newNode = new Node(newBoard, false, this, p, false);
+						
+						Node newNode = new Node(newBoard, false, this, p, false, newBoard.getFreePlaces().get(i));
 						newNode.setPlacementIndex(i);
+						
 						int tempVal = newNode.alphabetaprun(depth-1, value, max);
 						this.getChildren().add(newNode);
 						if(tempVal > value){
 							value = tempVal;
+							this.setValue(value);
+							this.setPlacementIndex(newNode.getPlacementIndex());
 						}
-						if(value > max){
-							this.setValue(max);
-							return max;
+						if(value >= max){
+							return value;
 						}
 					}
 				}
@@ -161,24 +170,25 @@ public class Node {
 			else{
 				int value = max;
 
-				for (int i = 0; i < this.board.getFreePlaces().size(); i++) {
-					newBoard.setBoard(this.board.getBoard());
-					newBoard.setPieces(this.board.getPieces());
+				for (int i = 0; i < newBoard.getFreePlaces().size() - 1; i++) {
+					
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
 					ArrayList<Piece> rem = new ArrayList<Piece>();
 					rem.addAll(newBoard.getRemainingPieces());
+					
 					for(Piece p: rem){
-						
-						Node newNode = new Node(newBoard, false, this, p, false);
+						this.setPickedPiece(p);
+						Node newNode = new Node(newBoard, true, this, p, false, newBoard.getFreePlaces().get(i));
 						newNode.setPlacementIndex(i);
 						int tempVal = newNode.alphabetaprun(depth-1, min, value);
 						this.getChildren().add(newNode);
 						if(tempVal < value){
 							value = tempVal;
 						}
-						if(value < min){
-							this.setValue(min);
-							return min;
+						if(value <= min){
+							this.setValue(value);
+							this.setPlacementIndex(newNode.getPlacementIndex());
+							return value;
 						}
 					}
 				}

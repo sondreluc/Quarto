@@ -31,7 +31,8 @@ public class Board {
 	}
 
 	public void setPieces(ArrayList<Piece> pieces) {
-		this.pieces = pieces;
+		this.pieces.clear();
+		this.pieces.addAll(pieces);
 	}
 
 	public boolean checkForWinner(boolean log){

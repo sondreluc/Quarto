@@ -70,7 +70,7 @@ public class Game {
 	
 	public static void main(String[] args){
 		
-		Game newGame = new Game(new Player(PlayerType.HUMAN, 1), new Player(PlayerType.HUMAN, 2));
+		Game newGame = new Game(new Player(PlayerType.MINIMAX3, 1), new Player(PlayerType.NOVICE, 2));
 		
 		boolean finished = false;
 		
@@ -78,7 +78,7 @@ public class Game {
 		int count = 1;
 		
 		while(!finished){
-			if(count<9){
+			if(count<10){
 				System.out.println();
 				System.out.println("Round: "+count);
 				newGame.playTurn(true, scanner, false);
@@ -97,7 +97,7 @@ public class Game {
 			}
 			else{
 				System.out.println();
-				System.out.println("Round: "+count);
+				System.out.println("Round: "+count+" Minimax engage");
 				newGame.playTurn(true, scanner, true);
 				
 				newGame.printBoard();
