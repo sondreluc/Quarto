@@ -175,6 +175,7 @@ public class Player {
 			Node best = root.getChildren().remove(0);
 			double bestValue = best.getValue();
 			for(Node child : root.getChildren()){
+				//System.out.println(child.getValue());
 				if(child.getValue()>bestValue){
 					bestValue = child.getValue();
 					best = child;

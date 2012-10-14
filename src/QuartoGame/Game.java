@@ -30,7 +30,7 @@ public class Game {
 		
 		if(log){
 			System.out.println();
-			//System.out.println("Remaining pieces:"+board.remainingToSting());
+			System.out.println("Remaining pieces:"+board.remainingToSting());
 		}
 		
 		Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
