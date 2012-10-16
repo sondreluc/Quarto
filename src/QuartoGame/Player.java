@@ -7,17 +7,25 @@ import java.util.Scanner;
 
 
 public class Player {
-	public enum PlayerType{RANDOM, NOVICE, HUMAN, MINIMAX3, MINIMAX4};
+	public enum PlayerType{RANDOM, NOVICE, HUMAN, MINIMAXD};
 	private PlayerType playerType;
 	private int playerID;
 	private Piece bestPick;
+	private int miniMaxDepth;
 	
 	
+	public Player(PlayerType pType, int id, int miniMaxDepth){
+		this.playerType = pType;
+		this.playerID = id;
+		this.bestPick = null;
+		this.miniMaxDepth = miniMaxDepth;
+		
+	}
 	public Player(PlayerType pType, int id){
 		this.playerType = pType;
 		this.playerID = id;
 		this.bestPick = null;
-		
+		this.miniMaxDepth = 0;
 	}
 	
 	
@@ -31,7 +39,7 @@ public class Player {
 			return p;
 		}
 		
-		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAX3&&!doMiniMax) || (playerType==PlayerType.MINIMAX4&&!doMiniMax)){
+		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAXD && !doMiniMax)){
 			ArrayList<Piece> goodPicks = new ArrayList<Piece>();
 			ArrayList<Piece> temp =  new ArrayList<Piece>();
 			temp.addAll(board.getRemainingPieces());
@@ -55,7 +63,7 @@ public class Player {
 			
 		}
 		
-		else if((playerType == PlayerType.MINIMAX3 || playerType == PlayerType.MINIMAX4 )  && doMiniMax){
+		else if((playerType == PlayerType.MINIMAXD )  && doMiniMax){
 			if(bestPick!=null){
 				board.getRemainingPieces().remove(bestPick);
 				return bestPick;
@@ -103,7 +111,7 @@ public class Player {
 			
 		}
 		
-		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAX3&&!doMiniMax) || (playerType==PlayerType.MINIMAX4&&!doMiniMax)){
+		else if(playerType==PlayerType.NOVICE || (playerType==PlayerType.MINIMAXD && !doMiniMax)){
 			if(board.possibleWin(piece) != -1){
 				board.placePiece(board.possibleWin(piece), piece);
 			}
@@ -114,9 +122,9 @@ public class Player {
 			}
 		}
 		
-		else if(playerType == PlayerType.MINIMAX3 && doMiniMax){
+		else if(playerType == PlayerType.MINIMAXD && doMiniMax){
 						
-			Node node = this.miniMaxMove(3, board, piece);
+			Node node = this.miniMaxMove(this.miniMaxDepth, board, piece);
 			if(node==null){
 				board.placePiece(board.getFreePlaces().get(0), piece);
 			}
@@ -125,16 +133,6 @@ public class Player {
 				this.setBestPick(node.getPickedPiece());
 			}
 
-		}
-		else if(playerType == PlayerType.MINIMAX4){
-			Node node = this.miniMaxMove(4, board, piece);
-			if(node==null){
-				board.placePiece(board.getFreePlaces().get(0), piece);
-			}
-			else{
-				board.placePiece(node.getPlacementIndex(), piece);
-				this.setBestPick(node.getPickedPiece());
-			}
 		}
 		
 		else if(playerType==PlayerType.HUMAN){
@@ -161,7 +159,6 @@ public class Player {
 					break;
 				}
 			}
-			
 		}
 	}
 
@@ -172,6 +169,12 @@ public class Player {
 	}
 
 
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+	public void setPlayerType(PlayerType playerType) {
+		this.playerType = playerType;
+	}
 	public void setPlayerID(int playerID) {
 		this.playerID = playerID;
 	}
@@ -215,6 +218,16 @@ public class Player {
 
 	public void setBestPick(Piece bestPick) {
 		this.bestPick = bestPick;
+	}
+
+
+	public int getMiniMaxDepth() {
+		return miniMaxDepth;
+	}
+
+
+	public void setMiniMaxDepth(int miniMaxDepth) {
+		this.miniMaxDepth = miniMaxDepth;
 	}
 	
 }
