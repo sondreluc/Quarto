@@ -333,14 +333,14 @@ public class Board {
 	}
 	
 	public ArrayList<Piece> getDiagonalRight(){
-		ArrayList<Piece> dia = new ArrayList<>();
+		ArrayList<Piece> dia = new ArrayList<Piece>();
 		for (int i = 0; i < 16; i+=5) {
 			dia.add(board.get(i));
 		}
 		return dia;
 	}
 	public ArrayList<Piece> getDiagonalLeft(){
-		ArrayList<Piece> dia = new ArrayList<>(); 
+		ArrayList<Piece> dia = new ArrayList<Piece>();
 		for (int i = 3; i <= 12; i+=3) {
 			dia.add(board.get(i));
 		}

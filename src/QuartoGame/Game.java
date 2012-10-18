@@ -1,363 +1,351 @@
 package QuartoGame;
 
 import java.util.Scanner;
-
-import QuartoGame.Player.PlayerType;
+import QuartoGame.AbstractPlayer.PlayerType;
 
 public class Game {
-	
-	private Board board;
-	private Player player1;
-	private Player player2;
-	private Player activePlayer;
-	int games;
-	boolean log;
-	boolean debug;
-	boolean printBoard;
-	
-	public Game(Player p1, Player p2, int numbGames, boolean log, boolean debug, boolean printBoard){
-		this.board = new Board();
-		this.player1 = p1;
-		this.player2 = p2;
-		this.activePlayer = p1;
-		this.games = numbGames;
-		this.log = log;
-		this.debug = debug;
-		this.printBoard = printBoard;
-	}
-	
-	public Player getPlayer1() {
-		return player1;
-	}
 
-	public void setPlayer1(Player player1) {
-		this.player1 = player1;
-	}
+    private Board board;
+    private Player player1;
+    private Player player2;
+    private Player activePlayer;
+    int games;
+    boolean log;
+    boolean debug;
+    boolean printBoard;
 
-	public Player getPlayer2() {
-		return player2;
-	}
+    public Game(Player p1, Player p2, int numbGames, boolean log, boolean debug, boolean printBoard) {
+        this.board = new Board();
+        this.player1 = p1;
+        this.player2 = p2;
+        this.activePlayer = p1;
+        this.games = numbGames;
+        this.log = log;
+        this.debug = debug;
+        this.printBoard = printBoard;
+    }
 
-	public void setPlayer2(Player player2) {
-		this.player2 = player2;
-	}
+    public Player getPlayer1() {
+        return player1;
+    }
 
-	public Player getActivePlayer() {
-		return activePlayer;
-	}
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
 
-	public void setActivePlayer(Player activePlayer) {
-		this.activePlayer = activePlayer;
-	}
+    public Player getPlayer2() {
+        return player2;
+    }
 
-	public int getGames() {
-		return games;
-	}
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
+    }
 
-	public void setGames(int games) {
-		this.games = games;
-	}
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
 
-	public boolean isLog() {
-		return log;
-	}
+    public void setActivePlayer(Player activePlayer) {
+        this.activePlayer = activePlayer;
+    }
 
-	public void setLog(boolean log) {
-		this.log = log;
-	}
+    public int getGames() {
+        return games;
+    }
 
-	public boolean isDebug() {
-		return debug;
-	}
+    public void setGames(int games) {
+        this.games = games;
+    }
 
-	public void setDebug(boolean debug) {
-		this.debug = debug;
-	}
+    public boolean isLog() {
+        return log;
+    }
 
-	public boolean isPrintBoard() {
-		return printBoard;
-	}
+    public void setLog(boolean log) {
+        this.log = log;
+    }
 
-	public void setPrintBoard(boolean printBoard) {
-		this.printBoard = printBoard;
-	}
-	
-	public Board getBoard() {
-		return board;
-	}
+    public boolean isDebug() {
+        return debug;
+    }
 
-	public void setBoard(Board board) {
-		this.board = board;
-	}
-	
-	public void playTurn(boolean log, Scanner scanner, boolean doMiniMax){
-		
-		if(log){
-			System.out.println();
-			System.out.println("Remaining pieces:"+board.remainingToSting());
-		}
-		
-		Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
-		this.board.setActivePiece(piece);
-		if(log){
-			System.out.println("Player #"+this.activePlayer.getPlayerID()+" picks "+piece.toString());
-		}
-		
-		if(this.activePlayer == this.player1)
-			this.activePlayer = this.player2;
-		else
-			this.activePlayer = this.player1;
-		
-		if(log){
-			System.out.println("Player #"+this.activePlayer.getPlayerID()+"'s turn to place piece "+piece.toString());
-		}
-		
-		this.activePlayer.placePiece(board, piece, scanner, doMiniMax, false);
-		
-		if(log){
-			System.out.println("Player #"+this.activePlayer.getPlayerID()+" has placed "+piece.toString());	
-		}
-		
-	}
-	
-	public void printBoard(){
-		System.out.println(board.printBoard());
-		
-	}
-	
-	public boolean isFinished(boolean log){
-		return board.checkForWinner(log);
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
 
-	}
-	
-	public void initGame(Scanner scanner){
-				
-		boolean again = true;
-		while(scanner.hasNext() && again){
-			
-			String in = scanner.next();
-			String[] settings = in.split("-");
-			System.out.println(settings.length);
-			if(settings.length == 1){
-				if(settings[0].toUpperCase().matches("D")){
-					break;
-				}
-			}
-			else if(settings.length == 6){
-				switch(settings[0].toUpperCase()){
-					case "H":
-						this.setPlayer1(new Player(PlayerType.HUMAN, 1));
-						break;
-					case "R":
-						this.setPlayer1(new Player(PlayerType.RANDOM, 1));
-						break;
-					case "N":
-						this.setPlayer1(new Player(PlayerType.NOVICE, 1));
-						break;
-					default:
-						if(settings[0].toUpperCase().startsWith("M")){
-							String[] depth = settings[0].split("");
-							if(depth[2].matches("\\d")){
-								this.setPlayer1(new Player(PlayerType.MINIMAXD, 1, Integer.parseInt(depth[2])));
-								break;
-							}
-						}
-						System.out.println("Invalid player type for player one!");
-						break;
-				}
-				switch(settings[1].toUpperCase()){
-					case "H":
-						this.setPlayer2(new Player(PlayerType.HUMAN, 2));
-						break;
-					case "R":
-						this.setPlayer2(new Player(PlayerType.RANDOM, 2));
-						break;
-					case "N":
-						this.setPlayer2(new Player(PlayerType.NOVICE, 2));
-						break;
-					default:
-						if(settings[1].toUpperCase().startsWith("M")){
-							String[] depth = settings[1].split("");
-							if(depth[2].matches("\\d")){
-								this.setPlayer2(new Player(PlayerType.MINIMAXD, 2, Integer.parseInt(depth[2])));
-								break;
-							}
-						}
-						System.out.println("Invalid player type for player two!");
-						break;
-				}
-				if(settings[2].matches("\\d")){
-					this.setGames(Integer.parseInt(settings[2]));
-				}
-				else{
-					System.out.println("Invalid input for number of games!");
-				}
-				if(settings[3].matches("\\d")){
-					if(Integer.parseInt(settings[3])==0){
-						this.setLog(false);
-					}
-				}
-				else{
-					System.out.println("Invalid input for Log variable(1/0)");
-				}
-				if(settings[4].matches("\\d")){
-					if(Integer.parseInt(settings[4])==1){
-						this.setDebug(true);
-					}
-				}
-				else{
-					System.out.println("Invalid input for Debug variable(1/0)");
-				}
-				
-				if(settings[5].matches("\\d")){
-					if(Integer.parseInt(settings[5])==1){
-						this.setPrintBoard(true);
-						break;
-					}
-				}
-				else{
-					System.out.println("Invalid input for PrintBoard variable(1/0)");
-				}
-			}
-			again = true;
-			System.out.println("Please try again!");
-			System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
-			
-		}
-	}
-	
-	
-	public static void main(String[] args){
-		int gameCount = 0;
-		int playerOneWins = 0;
-		int playerTwoWins = 0;
-		int ties = 0;
-		
-		Player p1 = new Player(PlayerType.NOVICE, 1);
-		Player p2 = new Player(PlayerType.RANDOM, 2);
-		int games = 1;
-		boolean log = true;
-		boolean debug = false;
-		boolean printBoard = false;
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		Game newGame = new Game(p1, p2, games, log, debug, printBoard);
+    public boolean isPrintBoard() {
+        return printBoard;
+    }
 
-		System.out.println("WELCOME TO QUARTO!");
-		System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
-		System.out.println("Default is: \"N-R-1-1-0-0\", to choose default type D");
-		System.out.println("Available player types are: (H)Human, (R)Random, (N)Novice, (MD)Minimax to depth D(remember to choose a number for D!)");
-		
-		newGame.initGame(scanner);
-		
-		System.out.println("Plays "+newGame.getGames()+" games!");
-		System.out.println("Player 1 is type: "+newGame.getPlayer1().getPlayerType().toString()+(newGame.getPlayer1().getMiniMaxDepth()>0? "-"+newGame.getPlayer1().getMiniMaxDepth():""));
-		System.out.println("Player 2 is type: "+newGame.getPlayer2().getPlayerType().toString()+(newGame.getPlayer2().getMiniMaxDepth()>0? "-"+newGame.getPlayer2().getMiniMaxDepth():""));
-		while(gameCount<newGame.getGames()){
-			System.out.print(".");
-			if(gameCount>1){
-				Game cloneGame = new Game(newGame.getPlayer1(),newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
-				newGame = cloneGame;
-			}
-			boolean finished = false;
-			
-			int count = 1;
-			
-			while(!finished){
-				if(count<7){
-					if(newGame.isLog()){
-						System.out.println();
-						System.out.println("Round: "+count);
-					}
-					newGame.playTurn(newGame.isDebug(), scanner, false);
-					
-					if(newGame.isPrintBoard()){
-							newGame.printBoard();
-					}
-					
-					if(newGame.isFinished(newGame.isLog())){
-						if(newGame.isLog()){
-							if(!newGame.isPrintBoard())
-								newGame.printBoard();
-							
-							System.out.println();
-							System.out.println("The winner is: Player #"+newGame.getActivePlayer().getPlayerID()+"!");
-						}
-						finished = true;
-						if(newGame.getActivePlayer().getPlayerID()==1){
-							playerOneWins++;
-						}
-						else{
-							playerTwoWins++;
-						}
-					}
-					else if(newGame.getBoard().getPieces().size() == 0){
-						System.out.println(newGame.getBoard().getPieces().size());
-						finished = true;
-						ties++;
-						if(newGame.isLog()){
-							if(!newGame.isPrintBoard())
-								newGame.printBoard();
-							
-							System.out.println("Its a tie!");
-						}
-					}	
-				}
-				else{
-					if(newGame.isLog()){
-						System.out.println();
-						if(newGame.getPlayer1().getPlayerType() == PlayerType.MINIMAXD || newGame.getPlayer2().getPlayerType() == PlayerType.MINIMAXD ){
-							System.out.println("Round: "+count+" Minimax engage");
-						}
-						else{
-							System.out.println("Round: "+count);
-						}
-					}
+    public void setPrintBoard(boolean printBoard) {
+        this.printBoard = printBoard;
+    }
 
-					newGame.playTurn(newGame.isDebug(), scanner, true);
+    public Board getBoard() {
+        return board;
+    }
 
-					if(newGame.isPrintBoard()){
-						newGame.printBoard();
-					}
-					
-					if(newGame.isFinished(newGame.isLog())){
-						if(newGame.isLog()){
-							if(!newGame.isPrintBoard())
-								newGame.printBoard();
-							
-							System.out.println();
-							System.out.println("The winner is: Player #"+newGame.getActivePlayer().getPlayerID()+"!");
-						}
-						finished = true;
-						if(newGame.getActivePlayer().getPlayerID()==1){
-							playerOneWins++;
-						}
-						else{
-							playerTwoWins++;
-						}
-					}
-					else if(newGame.getBoard().getPieces().size() == 0){
-						finished = true;
-						ties++;
-						if(newGame.isLog()){
-							if(!newGame.isPrintBoard())
-								newGame.printBoard();
-							
-							System.out.println("Its a tie!");
-						}
-					}	
-				}
-				count++;
-			}
-			gameCount++;
-		}
-		if(newGame.getGames()>1){
-			System.out.println("DONE!");
-			System.out.println("Player 1 won: "+playerOneWins+" times!");
-			System.out.println("Player 2 won: "+playerTwoWins+" times!");
-			System.out.println("The game tied: "+ties+" times!");
-		}
-	}
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void playTurn(boolean log, Scanner scanner, boolean doMiniMax) {
+
+        if (log) {
+            System.out.println();
+            System.out.println("Remaining pieces:" + board.remainingToSting());
+        }
+
+        Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
+        this.board.setActivePiece(piece);
+        if (log) {
+            System.out.println("Player #" + this.activePlayer.getPlayerID() + " picks " + piece.toString());
+        }
+
+        if (this.activePlayer == this.player1)
+            this.activePlayer = this.player2;
+        else
+            this.activePlayer = this.player1;
+
+        if (log) {
+            System.out.println("Player #" + this.activePlayer.getPlayerID() + "'s turn to place piece " + piece.toString());
+        }
+
+        this.activePlayer.placePiece(board, piece, scanner, doMiniMax, false);
+
+        if (log) {
+            System.out.println("Player #" + this.activePlayer.getPlayerID() + " has placed " + piece.toString());
+        }
+
+    }
+
+    public void printBoard() {
+        System.out.println(board.printBoard());
+
+    }
+
+    public boolean isFinished(boolean log) {
+        return board.checkForWinner(log);
+
+    }
+
+    public void initGame(Scanner scanner) {
+
+        boolean again = true;
+        while (scanner.hasNext() && again) {
+
+            String in = scanner.next();
+            String[] settings = in.split("-");
+            System.out.println(settings.length);
+            if (settings.length == 1) {
+                if (settings[0].toUpperCase().matches("D")) {
+                    break;
+                }
+            } else if (settings.length == 6) {
+                switch (settings[0].toUpperCase()) {
+                    case "H":
+                        this.setPlayer1(new Player(PlayerType.HUMAN, 1));
+                        break;
+                    case "R":
+                        this.setPlayer1(new Player(PlayerType.RANDOM, 1));
+                        break;
+                    case "N":
+                        this.setPlayer1(new Player(PlayerType.NOVICE, 1));
+                        break;
+                    default:
+                        if (settings[0].toUpperCase().startsWith("M")) {
+                            String[] depth = settings[0].split("");
+                            if (depth[2].matches("\\d")) {
+                                this.setPlayer1(new Player(PlayerType.MINIMAXD, 1, Integer.parseInt(depth[2])));
+                                break;
+                            }
+                        }
+                        System.out.println("Invalid player type for player one!");
+                        break;
+                }
+                switch (settings[1].toUpperCase()) {
+                    case "H":
+                        this.setPlayer2(new Player(PlayerType.HUMAN, 2));
+                        break;
+                    case "R":
+                        this.setPlayer2(new Player(PlayerType.RANDOM, 2));
+                        break;
+                    case "N":
+                        this.setPlayer2(new Player(PlayerType.NOVICE, 2));
+                        break;
+                    default:
+                        if (settings[1].toUpperCase().startsWith("M")) {
+                            String[] depth = settings[1].split("");
+                            if (depth[2].matches("\\d")) {
+                                this.setPlayer2(new Player(PlayerType.MINIMAXD, 2, Integer.parseInt(depth[2])));
+                                break;
+                            }
+                        }
+                        System.out.println("Invalid player type for player two!");
+                        break;
+                }
+                if (settings[2].matches("\\d")) {
+                    this.setGames(Integer.parseInt(settings[2]));
+                } else {
+                    System.out.println("Invalid input for number of games!");
+                }
+                if (settings[3].matches("\\d")) {
+                    if (Integer.parseInt(settings[3]) == 0) {
+                        this.setLog(false);
+                    }
+                } else {
+                    System.out.println("Invalid input for Log variable(1/0)");
+                }
+                if (settings[4].matches("\\d")) {
+                    if (Integer.parseInt(settings[4]) == 1) {
+                        this.setDebug(true);
+                    }
+                } else {
+                    System.out.println("Invalid input for Debug variable(1/0)");
+                }
+
+                if (settings[5].matches("\\d")) {
+                    if (Integer.parseInt(settings[5]) == 1) {
+                        this.setPrintBoard(true);
+                        break;
+                    }
+                } else {
+                    System.out.println("Invalid input for PrintBoard variable(1/0)");
+                }
+            }
+            again = true;
+            System.out.println("Please try again!");
+            System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
+
+        }
+    }
+
+
+    public static void main(String[] args) {
+        int gameCount = 0;
+        int playerOneWins = 0;
+        int playerTwoWins = 0;
+        int ties = 0;
+
+        Player p1 = new Player(PlayerType.NOVICE, 1);
+        Player p2 = new Player(PlayerType.RANDOM, 2);
+        int games = 1;
+        boolean log = true;
+        boolean debug = false;
+        boolean printBoard = false;
+
+        Scanner scanner = new Scanner(System.in);
+
+        Game newGame = new Game(p1, p2, games, log, debug, printBoard);
+
+        System.out.println("WELCOME TO QUARTO!");
+        System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
+        System.out.println("Default is: \"N-R-1-1-0-0\", to choose default type D");
+        System.out.println("Available player types are: (H)Human, (R)Random, (N)Novice, (MD)Minimax to depth D(remember to choose a number for D!)");
+
+        newGame.initGame(scanner);
+
+        System.out.println("Plays " + newGame.getGames() + " games!");
+        System.out.println("Player 1 is type: " + newGame.getPlayer1().getPlayerType().toString() + (newGame.getPlayer1().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer1().getMiniMaxDepth() : ""));
+        System.out.println("Player 2 is type: " + newGame.getPlayer2().getPlayerType().toString() + (newGame.getPlayer2().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer2().getMiniMaxDepth() : ""));
+        while (gameCount < newGame.getGames()) {
+            System.out.print(".");
+            if (gameCount > 1) {
+                Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
+                newGame = cloneGame;
+            }
+            boolean finished = false;
+
+            int count = 1;
+
+            while (!finished) {
+                if (count < 7) {
+                    if (newGame.isLog()) {
+                        System.out.println();
+                        System.out.println("Round: " + count);
+                    }
+                    newGame.playTurn(newGame.isDebug(), scanner, false);
+
+                    if (newGame.isPrintBoard()) {
+                        newGame.printBoard();
+                    }
+
+                    if (newGame.isFinished(newGame.isLog())) {
+                        if (newGame.isLog()) {
+                            if (!newGame.isPrintBoard())
+                                newGame.printBoard();
+
+                            System.out.println();
+                            System.out.println("The winner is: Player #" + newGame.getActivePlayer().getPlayerID() + "!");
+                        }
+                        finished = true;
+                        if (newGame.getActivePlayer().getPlayerID() == 1) {
+                            playerOneWins++;
+                        } else {
+                            playerTwoWins++;
+                        }
+                    } else if (newGame.getBoard().getPieces().size() == 0) {
+                        System.out.println(newGame.getBoard().getPieces().size());
+                        finished = true;
+                        ties++;
+                        if (newGame.isLog()) {
+                            if (!newGame.isPrintBoard())
+                                newGame.printBoard();
+
+                            System.out.println("Its a tie!");
+                        }
+                    }
+                } else {
+                    if (newGame.isLog()) {
+                        System.out.println();
+                        if (newGame.getPlayer1().getPlayerType() == PlayerType.MINIMAXD || newGame.getPlayer2().getPlayerType() == PlayerType.MINIMAXD) {
+                            System.out.println("Round: " + count + " Minimax engage");
+                        } else {
+                            System.out.println("Round: " + count);
+                        }
+                    }
+
+                    newGame.playTurn(newGame.isDebug(), scanner, true);
+
+                    if (newGame.isPrintBoard()) {
+                        newGame.printBoard();
+                    }
+
+                    if (newGame.isFinished(newGame.isLog())) {
+                        if (newGame.isLog()) {
+                            if (!newGame.isPrintBoard())
+                                newGame.printBoard();
+
+                            System.out.println();
+                            System.out.println("The winner is: Player #" + newGame.getActivePlayer().getPlayerID() + "!");
+                        }
+                        finished = true;
+                        if (newGame.getActivePlayer().getPlayerID() == 1) {
+                            playerOneWins++;
+                        } else {
+                            playerTwoWins++;
+                        }
+                    } else if (newGame.getBoard().getPieces().size() == 0) {
+                        finished = true;
+                        ties++;
+                        if (newGame.isLog()) {
+                            if (!newGame.isPrintBoard())
+                                newGame.printBoard();
+
+                            System.out.println("Its a tie!");
+                        }
+                    }
+                }
+                count++;
+            }
+            gameCount++;
+        }
+        if (newGame.getGames() > 1) {
+            System.out.println("DONE!");
+            System.out.println("Player 1 won: " + playerOneWins + " times!");
+            System.out.println("Player 2 won: " + playerTwoWins + " times!");
+            System.out.println("The game tied: " + ties + " times!!");
+        }
+    }
 
 }
