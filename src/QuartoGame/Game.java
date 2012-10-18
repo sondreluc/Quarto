@@ -6,15 +6,15 @@ import QuartoGame.AbstractPlayer.PlayerType;
 public class Game {
 
     private Board board;
-    private Player player1;
-    private Player player2;
-    private Player activePlayer;
+    private AbstractPlayer player1;
+    private AbstractPlayer player2;
+    private AbstractPlayer activePlayer;
     int games;
     boolean log;
     boolean debug;
     boolean printBoard;
 
-    public Game(Player p1, Player p2, int numbGames, boolean log, boolean debug, boolean printBoard) {
+    public Game(AbstractPlayer p1, AbstractPlayer p2, int numbGames, boolean log, boolean debug, boolean printBoard) {
         this.board = new Board();
         this.player1 = p1;
         this.player2 = p2;
@@ -25,27 +25,27 @@ public class Game {
         this.printBoard = printBoard;
     }
 
-    public Player getPlayer1() {
+    public AbstractPlayer getPlayer1() {
         return player1;
     }
 
-    public void setPlayer1(Player player1) {
+    public void setPlayer1(AbstractPlayer player1) {
         this.player1 = player1;
     }
 
-    public Player getPlayer2() {
+    public AbstractPlayer getPlayer2() {
         return player2;
     }
 
-    public void setPlayer2(Player player2) {
+    public void setPlayer2(AbstractPlayer player2) {
         this.player2 = player2;
     }
 
-    public Player getActivePlayer() {
+    public AbstractPlayer getActivePlayer() {
         return activePlayer;
     }
 
-    public void setActivePlayer(Player activePlayer) {
+    public void setActivePlayer(AbstractPlayer activePlayer) {
         this.activePlayer = activePlayer;
     }
 
@@ -227,9 +227,9 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        Player p1 = new Player(PlayerType.NOVICE, 1);
-        Player p2 = new Player(PlayerType.RANDOM, 2);
-        int games = 1;
+        AbstractPlayer p1 = new Player(PlayerType.NOVICE, 1);
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.NOVICE, 2);
+        int games = 10;
         boolean log = true;
         boolean debug = false;
         boolean printBoard = false;
