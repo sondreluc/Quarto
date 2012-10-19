@@ -103,15 +103,17 @@ public class Player extends AbstractPlayer {
                 board.placePiece(board.possibleWin(piece), piece);
             }
             else{
+            	
                 ArrayList<Integer> places = board.getFreePlaces();
-                int i = (int) ((Math.random()*places.size()));
-                board.placePiece((int)places.get(i), piece);
+                if(places.size()>0){
+                	int i = (int) ((Math.random()*places.size()));
+                    board.placePiece((int)places.get(i), piece);
+                }
             }
         }
 
         else if(playerType == PlayerType.MINIMAXD && doMiniMax){
-
-            Node node = this.miniMaxMove(this.miniMaxDepth, board, piece);
+            Node node = this.miniMaxMove(this.miniMaxDepth, board, piece, this.playerID);
             if(node==null){
                 board.placePiece(board.getFreePlaces().get(0), piece);
             }
@@ -164,14 +166,14 @@ public class Player extends AbstractPlayer {
         this.playerID = playerID;
     }
 
-    public Node miniMaxMove(int depth, Board board, Piece givenPiece){
+    public Node miniMaxMove(int depth, Board board, Piece givenPiece, int playerID){
         Board copy = new Board();
         copy.setBoard(board.getBoard());
         copy.setPieces(board.getPieces());
 
-        Node root = new Node(copy, true, null, givenPiece, true, 0);
+        Node root = new Node(copy, true, null, givenPiece, true, 0, playerID);
         root.alphabetaprun(depth, -999999999, 999999999);
-
+        
         if(root.isTerminal()){
             return root;
         }

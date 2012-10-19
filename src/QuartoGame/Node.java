@@ -2,7 +2,6 @@ package QuartoGame;
 
 import java.util.ArrayList;
 
-
 public class Node {
 
 	private Board board;
@@ -15,8 +14,9 @@ public class Node {
 	private Node parent;
 	private boolean terminal;
 	private boolean root;
+	private int playerID;
 	
-	public Node(Board board, boolean maxOrMin, Node parent, Piece given, boolean root, int placement){
+	public Node(Board board, boolean maxOrMin, Node parent, Piece given, boolean root, int placement, int playerID){
 		this.board = board;
 		this.value = 0;
 		this.max = maxOrMin;
@@ -27,6 +27,7 @@ public class Node {
 		this.pickedPiece = null;
 		this.root = root;
 		this.placementIndex = placement;
+		this.playerID = playerID;
 	}
 
 	public Board getBoard() {
@@ -78,7 +79,49 @@ public class Node {
 			this.setValue(-100);
 		}
 		else{
-			this.setValue(0);
+
+			if(isMax()){
+				
+				if(this.playerID==1){
+					boolean forceWin = true;
+					for(Piece p : this.board.getRemainingPieces()){
+						if(this.board.possibleWin(p) == -1){
+							forceWin = false;
+						}
+					}
+					if(forceWin){
+						this.setValue(100);
+					}
+					else{
+						this.setValue(this.spesialEval()*5);
+					}
+				}
+				
+				else{
+					
+					this.setValue(0);
+				}
+			}
+			else{
+				
+				if(this.playerID==1){
+					boolean forceLoss = true;
+					for(Piece p : this.board.getRemainingPieces()){
+						if(this.board.possibleWin(p) == -1){
+							forceLoss = false;
+						}
+					}
+					if(forceLoss){
+						this.setValue(-100);
+					}
+					else{
+						this.setValue(-this.spesialEval()*5);
+					}
+				}
+				else{
+					this.setValue(0);
+				}
+			}
 		}
 		return this.value;
 	
@@ -148,7 +191,7 @@ public class Node {
 
 					for(Piece p: rem){
 						
-						Node newNode = new Node(newBoard, false, this, p, false, placementIndex);
+						Node newNode = new Node(newBoard, false, this, p, false, placementIndex, this.playerID);
 						newNode.setPickedPiece(p);
 						this.getChildren().add(newNode);
 						int tempVal = newNode.alphabetaprun(depth-1, value, max);
@@ -182,7 +225,7 @@ public class Node {
 					newBoard.placePiece(newBoard.getFreePlaces().get(i), this.getGivenPiece());
 					
 					for(Piece p: rem){
-						Node newNode = new Node(newBoard, true, this, p, false, placementIndex);
+						Node newNode = new Node(newBoard, true, this, p, false, placementIndex, this.playerID);
 						newNode.setPickedPiece(p);
 						this.getChildren().add(newNode);
 						int tempVal = newNode.alphabetaprun(depth-1, min, value);
@@ -208,6 +251,91 @@ public class Node {
 
 	public void setPlacementIndex(int placementIndex) {
 		this.placementIndex = placementIndex;
+	}
+	
+	public int spesialEval(){
+		
+		int winningPos = 0;
+		for (int i = 0; i < 4; i++) {
+
+			winningPos += checkList(this.getBoard().getRow(i));
+			winningPos += checkList(this.getBoard().getColumn(i));
+		}
+		winningPos+= checkList(this.getBoard().getDiagonalLeft());
+		winningPos+= checkList(this.getBoard().getDiagonalRight());
+		
+		return winningPos;
+	}
+	
+	public int checkList(ArrayList<Piece> list){
+		int numberOfWinningPos = 0;
+		
+		if(list.contains(null)){
+			ArrayList<Piece> temp = new ArrayList<Piece>();
+			for(Piece p : list){
+				if(p != null){
+					temp.add(p);
+				}
+			}
+			list = temp;
+		}
+		if(list.size()==3){
+			Piece first = list.remove(0);
+			boolean color = true;
+			boolean height = true;
+			boolean shape = true;
+			boolean cons = true;
+			for(Piece p : list){
+				if(!first.getColor().equals(p.getColor())){
+					color = false;
+				}
+				if(!first.getHeight().equals(p.getHeight())){
+					height = false;
+				}
+				if(!first.getShape().equals(p.getShape())){
+					shape = false;
+				}
+				if(!first.getConsistensy().equals(p.getConsistensy())){
+					cons = false;
+				}
+			}
+			
+			if(color){
+				for(Piece p : this.getBoard().getRemainingPieces()){
+					if(first.getColor().equals(p.getColor())){
+						numberOfWinningPos++;
+					}
+				}
+			}
+			if(shape){
+				for(Piece p : this.getBoard().getRemainingPieces()){
+					if(first.getShape().equals(p.getShape())){
+						numberOfWinningPos++;
+					}
+				}
+			}
+			if(height){
+				for(Piece p : this.getBoard().getRemainingPieces()){
+					if(first.getHeight().equals(p.getHeight())){
+						numberOfWinningPos++;
+					}
+				}
+			}
+			if(cons){
+				for(Piece p : this.getBoard().getRemainingPieces()){
+					if(first.getConsistensy().equals(p.getConsistensy())){
+						numberOfWinningPos++;
+					}
+				}
+			}
+//			System.out.println("color"+color);
+//			System.out.println("shape"+shape);
+//			System.out.println("con"+cons);
+//			System.out.println("height"+height);
+//			System.out.println(numberOfWinningPos);
+		}
+		
+		return numberOfWinningPos;
 	}
 	
 }

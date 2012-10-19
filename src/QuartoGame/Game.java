@@ -227,12 +227,12 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 2);
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 3);
+        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 1, 3);
         int games = 10;
-        boolean log = true;
-        boolean debug = true;
-        boolean printBoard = true;
+        boolean log = false;
+        boolean debug = false;
+        boolean printBoard = false;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -258,13 +258,13 @@ public class Game {
 
             int count = 1;
 
-            while (!finished) {
-                if (count < 7) {
+            while (!finished && count < 17 ) {
+                if (count < 5) {
                     if (newGame.isLog()) {
                         System.out.println();
                         System.out.println("Round: " + count);
                     }
-                    newGame.playTurn(newGame.isDebug(), scanner, true);
+                    newGame.playTurn(newGame.isDebug(), scanner, false);
 
                     if (newGame.isPrintBoard()) {
                         newGame.printBoard();
@@ -279,7 +279,7 @@ public class Game {
                             System.out.println("The winner is: Player #" + newGame.getActivePlayer().getPlayerID() + "!");
                         }
                         finished = true;
-                        if (newGame.getActivePlayer().getPlayerID() == 1) {
+                        if (newGame.getActivePlayer() == newGame.getPlayer1()) {
                             playerOneWins++;
                         } else {
                             playerTwoWins++;
@@ -319,7 +319,7 @@ public class Game {
                             System.out.println("The winner is: Player #" + newGame.getActivePlayer().getPlayerID() + "!");
                         }
                         finished = true;
-                        if (newGame.getActivePlayer().getPlayerID() == 1) {
+                        if (newGame.getActivePlayer() == newGame.getPlayer1()) {
                             playerOneWins++;
                         } else {
                             playerTwoWins++;
@@ -337,6 +337,8 @@ public class Game {
                 }
                 count++;
             }
+            if(!finished)
+            	ties++;
             gameCount++;
         }
         if (newGame.getGames() > 1) {
