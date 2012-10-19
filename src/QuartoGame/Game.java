@@ -96,7 +96,7 @@ public class Game {
             System.out.println("Remaining pieces:" + board.remainingToSting());
         }
 
-        Piece piece = this.activePlayer.pickPiece(board, scanner, doMiniMax);
+        Piece piece = this.activePlayer.doPickPiece(board, scanner, doMiniMax);
         this.board.setActivePiece(piece);
         if (log) {
             System.out.println("Player #" + this.activePlayer.getPlayerID() + " picks " + piece.toString());
@@ -111,7 +111,7 @@ public class Game {
             System.out.println("Player #" + this.activePlayer.getPlayerID() + "'s turn to place piece " + piece.toString());
         }
 
-        this.activePlayer.placePiece(board, piece, scanner, doMiniMax, false);
+        this.activePlayer.doPlacePiece(board, piece, scanner, doMiniMax, false);
 
         if (log) {
             System.out.println("Player #" + this.activePlayer.getPlayerID() + " has placed " + piece.toString());
@@ -228,8 +228,8 @@ public class Game {
         int ties = 0;
 
         AbstractPlayer p1 = new Player(PlayerType.NOVICE, 1);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.NOVICE, 2);
-        int games = 10;
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.RANDOM, 2);
+        int games = 1;
         boolean log = true;
         boolean debug = false;
         boolean printBoard = false;
@@ -250,7 +250,7 @@ public class Game {
         System.out.println("Player 2 is type: " + newGame.getPlayer2().getPlayerType().toString() + (newGame.getPlayer2().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer2().getMiniMaxDepth() : ""));
         while (gameCount < newGame.getGames()) {
             System.out.print(".");
-            if (gameCount > 1) {
+            if (gameCount >= 1) {
                 Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
                 newGame = cloneGame;
             }
@@ -304,7 +304,6 @@ public class Game {
                             System.out.println("Round: " + count);
                         }
                     }
-
                     newGame.playTurn(newGame.isDebug(), scanner, true);
 
                     if (newGame.isPrintBoard()) {
