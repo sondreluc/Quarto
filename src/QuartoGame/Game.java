@@ -341,12 +341,12 @@ public class Game {
         }
         if (newGame.getGames() > 1) {
             System.out.println("DONE!");
-            System.out.println("Player 1 won: " + playerOneWins + " times!");
-            System.out.println("Player 2 won: " + playerTwoWins + " times!");
+            System.out.println("Player " + p1.getPlayerID() + " won: " + playerOneWins + " times!");
+            System.out.println("Player " + p2.getPlayerID() + " won: " + playerTwoWins + " times!");
             System.out.println("The game tied: " + ties + " times!!");
             
-            System.out.println("Player 1 spendt " + p1.getTimeSpent() + " ms.");
-            System.out.println("Player 2 spendt " + p2.getTimeSpent() + " ms.");
+            System.out.println("Player " + p1.getPlayerID() + " spendt " + p1.getTimeSpent() + " ms.");
+            System.out.println("Player " + p2.getPlayerID() + " spendt " + p2.getTimeSpent() + " ms.");
         }
     }
 

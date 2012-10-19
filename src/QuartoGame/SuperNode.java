@@ -15,9 +15,9 @@ public class SuperNode {
     }
 
     public int bestPlace(int depth){
-        int bestPlace = -1;
         children = new ArrayList<SuperNode>();
         int size = gameState.getFreePlaces().size();
+        ArrayList<Integer> bestPlaces = new ArrayList<Integer>();
         int bestValue = -10000;
         for (int i = 0; i < size; i++) {
             Board newGameState = new Board();
@@ -29,17 +29,23 @@ public class SuperNode {
             int newValue = newNode.getValue(depth, bestValue, 10000);
             if(newValue > bestValue) {
                 bestValue = newValue;
-                bestPlace = gameState.getFreePlaces().get(i);
+                bestPlaces.clear();
+                bestPlaces.add(gameState.getFreePlaces().get(i));
+            }
+            else if(newValue == bestValue){
+            	bestPlaces.add(gameState.getFreePlaces().get(i));
             }
         }
-        return bestPlace;
+        if(size == 0)
+        	System.out.println("lol");
+        return bestPlaces.get((int) Math.floor(bestPlaces.size() * Math.random()));
     }
 
     public Piece bestPiece(int depth){
-        Piece bestPiece = null;
         children = new ArrayList<SuperNode>();
         int size = gameState.getRemainingPieces().size();
         int bestValue = -10000;
+        ArrayList<Piece> bestPieces = new ArrayList<Piece>();
         for (int i = 0; i < size; i++) {
             Board newGameState = new Board();
 
@@ -49,11 +55,15 @@ public class SuperNode {
             SuperNode newNode = new SuperNode(newGameState, false, true);
             int newValue = newNode.getValue(depth - 1, bestValue, 10000);
             if(newValue > bestValue) {
-                bestValue = newValue;
-                bestPiece = gameState.getRemainingPieces().get(i);
+            	bestValue = newValue;
+                bestPieces.clear();
+                bestPieces.add(gameState.getRemainingPieces().get(i));
+            }
+            else if(newValue == bestValue){
+            	bestPieces.add(gameState.getRemainingPieces().get(i));
             }
         }
-        return bestPiece;
+        return bestPieces.get((int) Math.floor(bestPieces.size() * Math.random()));
     }
 
     private int getValue(int depth, int initAlpha, int initBeta){
