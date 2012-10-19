@@ -227,12 +227,12 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.NOVICE, 1);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.RANDOM, 2);
-        int games = 1;
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 2);
+        int games = 10;
         boolean log = true;
-        boolean debug = false;
-        boolean printBoard = false;
+        boolean debug = true;
+        boolean printBoard = true;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -243,7 +243,7 @@ public class Game {
         System.out.println("Default is: \"N-R-1-1-0-0\", to choose default type D");
         System.out.println("Available player types are: (H)Human, (R)Random, (N)Novice, (MD)Minimax to depth D(remember to choose a number for D!)");
 
-        newGame.initGame(scanner);
+        //newGame.initGame(scanner);
 
         System.out.println("Plays " + newGame.getGames() + " games!");
         System.out.println("Player 1 is type: " + newGame.getPlayer1().getPlayerType().toString() + (newGame.getPlayer1().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer1().getMiniMaxDepth() : ""));
@@ -264,7 +264,7 @@ public class Game {
                         System.out.println();
                         System.out.println("Round: " + count);
                     }
-                    newGame.playTurn(newGame.isDebug(), scanner, false);
+                    newGame.playTurn(newGame.isDebug(), scanner, true);
 
                     if (newGame.isPrintBoard()) {
                         newGame.printBoard();
@@ -344,6 +344,9 @@ public class Game {
             System.out.println("Player 1 won: " + playerOneWins + " times!");
             System.out.println("Player 2 won: " + playerTwoWins + " times!");
             System.out.println("The game tied: " + ties + " times!!");
+            
+            System.out.println("Player 1 spendt " + p1.getTimeSpent() + " ms.");
+            System.out.println("Player 2 spendt " + p2.getTimeSpent() + " ms.");
         }
     }
 

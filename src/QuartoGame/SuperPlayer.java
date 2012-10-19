@@ -51,17 +51,23 @@ public class SuperPlayer extends AbstractPlayer {
 
 
     private Piece randomPickPiece(Board board, Scanner scanner, boolean doMiniMax){
-        return board.getRemainingPieces().get((int) Math.floor(Math.random() * board.getRemainingPieces().size()));
+    	Piece piece = board.getRemainingPieces().get((int) Math.floor(Math.random() * board.getRemainingPieces().size()));
+    	board.getRemainingPieces().remove(piece);
+        return piece;
     }
 
     private Piece novicePickPiece(Board board, Scanner scanner, boolean doMiniMax){
         SuperNode root = new SuperNode(board, true, false);
-        return root.bestPiece(1);
+        Piece piece = root.bestPiece(1);
+        board.getRemainingPieces().remove(piece);
+        return piece;
     }
 
     private Piece minmaxPickPiece(Board board, Scanner scanner, boolean doMiniMax){
         SuperNode root = new SuperNode(board, true, false);
-        return root.bestPiece(miniMaxDepth);
+        Piece piece = root.bestPiece(miniMaxDepth);
+        board.getRemainingPieces().remove(piece);
+        return piece;
     }
 
     private Piece humanPickPiece(Board board, Scanner scanner, boolean doMiniMax){
