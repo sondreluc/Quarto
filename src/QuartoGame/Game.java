@@ -89,10 +89,16 @@ public class Game {
         this.board = board;
     }
 
+    private int remP = 0;
     public void playTurn(boolean log, Scanner scanner, boolean doMiniMax) {
 
         if (log) {
             System.out.println();
+            int tremP = board.getRemainingPieces().size();
+            if (remP == tremP){
+                System.out.println("SÆRR!!!");
+            }
+            remP = tremP;
             System.out.println("Remaining pieces:" + board.remainingToSting());
         }
 
@@ -227,12 +233,12 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 3);
-        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 1, 3);
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
         int games = 10;
-        boolean log = false;
+        boolean log = true;
         boolean debug = false;
-        boolean printBoard = false;
+        boolean printBoard = true;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -339,6 +345,8 @@ public class Game {
             }
             if(!finished)
             	ties++;
+            if(p1.getBestPick() != null)
+                p1.setBestPick(null);
             gameCount++;
         }
         if (newGame.getGames() > 1) {
@@ -347,8 +355,8 @@ public class Game {
             System.out.println("Player " + p2.getPlayerID() + " won: " + playerTwoWins + " times!");
             System.out.println("The game tied: " + ties + " times!!");
             
-            System.out.println("Player " + p1.getPlayerID() + " spendt " + p1.getTimeSpent() + " ms.");
-            System.out.println("Player " + p2.getPlayerID() + " spendt " + p2.getTimeSpent() + " ms.");
+            System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() + " ms.");
+            System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() + " ms.");
         }
     }
 

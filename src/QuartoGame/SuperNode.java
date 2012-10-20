@@ -26,7 +26,7 @@ public class SuperNode {
             newGameState.setPieces(gameState.getPieces());
             newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
             SuperNode newNode = new SuperNode(newGameState, true, false);
-            int newValue = newNode.getValue(depth, bestValue, 10000);
+            int newValue = newNode.getValue(depth - 1, -10000, 10000);
             if(newValue > bestValue) {
                 bestValue = newValue;
                 bestPlaces.clear();
@@ -36,8 +36,6 @@ public class SuperNode {
             	bestPlaces.add(gameState.getFreePlaces().get(i));
             }
         }
-        if(size == 0)
-        	System.out.println("lol");
         return bestPlaces.get((int) Math.floor(bestPlaces.size() * Math.random()));
     }
 
@@ -53,7 +51,7 @@ public class SuperNode {
             newGameState.setPieces(gameState.getPieces());
             newGameState.setActivePiece(gameState.getRemainingPieces().get(i));
             SuperNode newNode = new SuperNode(newGameState, false, true);
-            int newValue = newNode.getValue(depth - 1, bestValue, 10000);
+            int newValue = newNode.getValue(depth - 1, -10000, 10000);
             if(newValue > bestValue) {
             	bestValue = newValue;
                 bestPieces.clear();

@@ -12,9 +12,6 @@ public class Player extends AbstractPlayer {
         super(pType,id,miniMaxDepth);
     }
 
-    private Piece bestPick;
-
-
 
     public Piece pickPiece(Board board, Scanner scanner, boolean doMiniMax){
 
@@ -51,9 +48,9 @@ public class Player extends AbstractPlayer {
         }
 
         else if((playerType == PlayerType.MINIMAXD )  && doMiniMax){
-            if(bestPick!=null){
-                board.getRemainingPieces().remove(bestPick);
-                return bestPick;
+            if(getBestPick()!=null){
+                board.getRemainingPieces().remove(getBestPick());
+                return getBestPick();
             }
             else{
                 return pickPiece(board, scanner, !doMiniMax);
@@ -152,20 +149,6 @@ public class Player extends AbstractPlayer {
     }
 
 
-
-    public int getPlayerID() {
-        return playerID;
-    }
-
-
-
-    public void setPlayerType(PlayerType playerType) {
-        this.playerType = playerType;
-    }
-    public void setPlayerID(int playerID) {
-        this.playerID = playerID;
-    }
-
     public Node miniMaxMove(int depth, Board board, Piece givenPiece, int playerID){
         Board copy = new Board();
         copy.setBoard(board.getBoard());
@@ -196,17 +179,4 @@ public class Player extends AbstractPlayer {
             return best;
         }
     }
-
-
-    public Piece getBestPick() {
-        return bestPick;
-    }
-
-
-    public void setBestPick(Piece bestPick) {
-        this.bestPick = bestPick;
-    }
-
-
-
 }
