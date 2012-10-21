@@ -96,7 +96,7 @@ public class Game {
             System.out.println();
             int tremP = board.getRemainingPieces().size();
             if (remP == tremP){
-                System.out.println("SÆRR!!!");
+                System.out.println("S��RR!!!");
             }
             remP = tremP;
             System.out.println("Remaining pieces:" + board.remainingToSting());
@@ -233,11 +233,11 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
-        int games = 10;
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 3);
+        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 1, 3);
+        int games = 100;
         boolean log = true;
-        boolean debug = false;
+        boolean debug = true;
         boolean printBoard = true;
 
         Scanner scanner = new Scanner(System.in);
@@ -259,13 +259,15 @@ public class Game {
             if (gameCount >= 1) {
                 Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
                 newGame = cloneGame;
+                if(gameCount % 2 == 0)
+                	newGame.setActivePlayer(p2);
             }
             boolean finished = false;
 
             int count = 1;
 
             while (!finished && count < 17 ) {
-                if (count < 5) {
+                if (count < 9) {
                     if (newGame.isLog()) {
                         System.out.println();
                         System.out.println("Round: " + count);
@@ -347,6 +349,8 @@ public class Game {
             	ties++;
             if(p1.getBestPick() != null)
                 p1.setBestPick(null);
+            if(p2.getBestPick() != null)
+            	p2.setBestPick(null);
             gameCount++;
         }
         if (newGame.getGames() > 1) {
