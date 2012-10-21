@@ -233,9 +233,9 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 3);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 1, 3);
-        int games = 100;
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 4);
+        int games = 10;
         boolean log = true;
         boolean debug = true;
         boolean printBoard = true;
@@ -267,7 +267,7 @@ public class Game {
             int count = 1;
 
             while (!finished && count < 17 ) {
-                if (count < 9) {
+                if (count < 0) {
                     if (newGame.isLog()) {
                         System.out.println();
                         System.out.println("Round: " + count);
