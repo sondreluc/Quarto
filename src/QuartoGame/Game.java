@@ -234,8 +234,8 @@ public class Game {
         int ties = 0;
 
         AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 4);
-        int games = 10;
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
+        int games = 100;
         boolean log = true;
         boolean debug = true;
         boolean printBoard = true;
@@ -256,6 +256,7 @@ public class Game {
         System.out.println("Player 2 is type: " + newGame.getPlayer2().getPlayerType().toString() + (newGame.getPlayer2().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer2().getMiniMaxDepth() : ""));
         while (gameCount < newGame.getGames()) {
             System.out.print(".");
+            System.out.print("\r" + Math.round(((double)gameCount/(double)games)*100) + "%");
             if (gameCount >= 1) {
                 Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
                 newGame = cloneGame;

@@ -15,7 +15,6 @@ public class SuperNode {
     }
 
     public int bestPlace(int depth){
-        children = new ArrayList<SuperNode>();
         int size = gameState.getFreePlaces().size();
         ArrayList<Integer> bestPlaces = new ArrayList<Integer>();
         int bestValue = -10000;
@@ -40,7 +39,6 @@ public class SuperNode {
     }
 
     public Piece bestPiece(int depth){
-        children = new ArrayList<SuperNode>();
         int size = gameState.getRemainingPieces().size();
         int bestValue = -10000;
         ArrayList<Piece> bestPieces = new ArrayList<Piece>();
@@ -75,36 +73,11 @@ public class SuperNode {
         else{
             int alpha = initAlpha;
             int beta = initBeta;
-            if(isPlace){
-                children = new ArrayList<SuperNode>();
-                int size = gameState.getFreePlaces().size();
-
-                for (int i = 0; i < size; i++) {
-                    Board newGameState = new Board();
-
-                    newGameState.setBoard(gameState.getBoard());
-                    newGameState.setPieces(gameState.getPieces());
-                    newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
-                    children.add(new SuperNode(newGameState, isMe, false));
-                }
-            }
-            else{
-                children = new ArrayList<SuperNode>();
-                int size = gameState.getRemainingPieces().size();
-
-                for (int i = 0; i < size; i++) {
-                    Board newGameState = new Board();
-
-                    newGameState.setBoard(gameState.getBoard());
-                    newGameState.setPieces(gameState.getPieces());
-                    newGameState.setActivePiece(gameState.getRemainingPieces().get(i));
-                    children.add(new SuperNode(newGameState, !isMe, true));
-                }
-            }
+            makeChildren();
 
             if (isMe){
             	int newDepth = depth;
-            	if(!isPlace) newDepth--;
+            	if(isPlace) newDepth--;
             	for(SuperNode child : children){
                     // Se her etter feil ;)
                 	alpha = Math.max(alpha, child.getValue(newDepth, alpha, beta));
@@ -114,12 +87,41 @@ public class SuperNode {
             }
             else{
             	int newDepth = depth;
-            	if(!isPlace) newDepth--;
+            	if(isPlace) newDepth--;
             	for(SuperNode child : children){
                 	beta = Math.min(beta, child.getValue(newDepth, alpha, beta));
                     if (beta <= alpha) break; // (Alpha cut-off)
                 }
                 return beta;
+            }
+        }
+    }
+
+    private void makeChildren(){
+        if(isPlace){
+            children = new ArrayList<SuperNode>();
+            int size = gameState.getFreePlaces().size();
+
+            for (int i = 0; i < size; i++) {
+                Board newGameState = new Board();
+
+                newGameState.setBoard(gameState.getBoard());
+                newGameState.setPieces(gameState.getPieces());
+                newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
+                children.add(new SuperNode(newGameState, isMe, false));
+            }
+        }
+        else{
+            children = new ArrayList<SuperNode>();
+            int size = gameState.getRemainingPieces().size();
+
+            for (int i = 0; i < size; i++) {
+                Board newGameState = new Board();
+
+                newGameState.setBoard(gameState.getBoard());
+                newGameState.setPieces(gameState.getPieces());
+                newGameState.setActivePiece(gameState.getRemainingPieces().get(i));
+                children.add(new SuperNode(newGameState, !isMe, true));
             }
         }
     }
