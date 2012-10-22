@@ -233,12 +233,12 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 2);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 4);
+        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 1, 4);
         int games = 100;
-        boolean log = true;
-        boolean debug = true;
-        boolean printBoard = true;
+        boolean log = false;
+        boolean debug = false;
+        boolean printBoard = false;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -268,7 +268,7 @@ public class Game {
             int count = 1;
 
             while (!finished && count < 17 ) {
-                if (count < 0) {
+                if (count < 8) {
                     if (newGame.isLog()) {
                         System.out.println();
                         System.out.println("Round: " + count);

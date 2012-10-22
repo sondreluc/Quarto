@@ -79,43 +79,62 @@ public class Node {
 			this.setValue(-100);
 		}
 		else{
-
-			if(isMax()){
-				
+			if(!isMax()){
 				if(this.playerID==1){
-					boolean forceWin = true;
-					for(Piece p : this.board.getRemainingPieces()){
-						if(this.board.possibleWin(p) == -1){
-							forceWin = false;
-						}
-					}
-					if(forceWin){
-						this.setValue(100);
+					ArrayList<Piece> remainingPieces = new ArrayList<Piece>();
+					remainingPieces.addAll(this.board.getRemainingPieces());
+					remainingPieces.remove(this.getPickedPiece());
+					if(this.board.possibleWin(this.getPickedPiece())!=-1){
+						this.setValue(-75);
 					}
 					else{
-						this.setValue(this.spesialEval()*5);
+						boolean forceWin = true;
+						int count = 0;
+						for(Piece p : remainingPieces){
+							if(this.board.possibleWin(p) == -1){
+								forceWin = false;
+							}
+							else{
+								count++;
+							}
+						}
+						if(forceWin){
+							this.setValue(50);
+						}
+						else{
+							this.setValue((count/remainingPieces.size())*50);
+						}
 					}
 				}
-				
 				else{
-					
 					this.setValue(0);
 				}
 			}
 			else{
-				
 				if(this.playerID==1){
-					boolean forceLoss = true;
-					for(Piece p : this.board.getRemainingPieces()){
-						if(this.board.possibleWin(p) == -1){
-							forceLoss = false;
-						}
-					}
-					if(forceLoss){
-						this.setValue(-100);
+					ArrayList<Piece> remainingPieces = new ArrayList<Piece>();
+					remainingPieces.addAll(this.board.getRemainingPieces());
+					remainingPieces.remove(this.getPickedPiece());
+					if(this.board.possibleWin(this.getPickedPiece())!=-1){
+						this.setValue(75);
 					}
 					else{
-						this.setValue(-this.spesialEval()*5);
+						boolean forceLoss = true;
+						int count = 0;
+						for(Piece p : remainingPieces){
+							if(this.board.possibleWin(p) == -1){
+								forceLoss = false;
+							}
+							else{
+								count++;
+							}
+						}
+						if(forceLoss){
+							this.setValue(-50);
+						}
+						else{
+							this.setValue(-(count/remainingPieces.size())*50);
+						}
 					}
 				}
 				else{
@@ -251,91 +270,6 @@ public class Node {
 
 	public void setPlacementIndex(int placementIndex) {
 		this.placementIndex = placementIndex;
-	}
-	
-	public int spesialEval(){
-		
-		int winningPos = 0;
-		for (int i = 0; i < 4; i++) {
-
-			winningPos += checkList(this.getBoard().getRow(i));
-			winningPos += checkList(this.getBoard().getColumn(i));
-		}
-		winningPos+= checkList(this.getBoard().getDiagonalLeft());
-		winningPos+= checkList(this.getBoard().getDiagonalRight());
-		
-		return winningPos;
-	}
-	
-	public int checkList(ArrayList<Piece> list){
-		int numberOfWinningPos = 0;
-		
-		if(list.contains(null)){
-			ArrayList<Piece> temp = new ArrayList<Piece>();
-			for(Piece p : list){
-				if(p != null){
-					temp.add(p);
-				}
-			}
-			list = temp;
-		}
-		if(list.size()==3){
-			Piece first = list.remove(0);
-			boolean color = true;
-			boolean height = true;
-			boolean shape = true;
-			boolean cons = true;
-			for(Piece p : list){
-				if(!first.getColor().equals(p.getColor())){
-					color = false;
-				}
-				if(!first.getHeight().equals(p.getHeight())){
-					height = false;
-				}
-				if(!first.getShape().equals(p.getShape())){
-					shape = false;
-				}
-				if(!first.getConsistensy().equals(p.getConsistensy())){
-					cons = false;
-				}
-			}
-			
-			if(color){
-				for(Piece p : this.getBoard().getRemainingPieces()){
-					if(first.getColor().equals(p.getColor())){
-						numberOfWinningPos++;
-					}
-				}
-			}
-			if(shape){
-				for(Piece p : this.getBoard().getRemainingPieces()){
-					if(first.getShape().equals(p.getShape())){
-						numberOfWinningPos++;
-					}
-				}
-			}
-			if(height){
-				for(Piece p : this.getBoard().getRemainingPieces()){
-					if(first.getHeight().equals(p.getHeight())){
-						numberOfWinningPos++;
-					}
-				}
-			}
-			if(cons){
-				for(Piece p : this.getBoard().getRemainingPieces()){
-					if(first.getConsistensy().equals(p.getConsistensy())){
-						numberOfWinningPos++;
-					}
-				}
-			}
-//			System.out.println("color"+color);
-//			System.out.println("shape"+shape);
-//			System.out.println("con"+cons);
-//			System.out.println("height"+height);
-//			System.out.println(numberOfWinningPos);
-		}
-		
-		return numberOfWinningPos;
 	}
 	
 }
