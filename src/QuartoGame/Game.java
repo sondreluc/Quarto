@@ -96,7 +96,7 @@ public class Game {
             System.out.println();
             int tremP = board.getRemainingPieces().size();
             if (remP == tremP){
-                System.out.println("S��RR!!!");
+                System.out.println("SÆRR!!!");
             }
             remP = tremP;
             System.out.println("Remaining pieces:" + board.remainingToSting());
@@ -233,8 +233,8 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 2, 4);
-        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 1, 4);
+        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
+        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 2, 4);
         int games = 100;
         boolean log = false;
         boolean debug = false;
@@ -260,7 +260,7 @@ public class Game {
             if (gameCount >= 1) {
                 Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
                 newGame = cloneGame;
-                if(gameCount % 2 == 0)
+                if(gameCount % 2 == 1)
                 	newGame.setActivePlayer(p2);
             }
             boolean finished = false;

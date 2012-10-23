@@ -85,7 +85,7 @@ public class Node {
 					remainingPieces.addAll(this.board.getRemainingPieces());
 					remainingPieces.remove(this.getPickedPiece());
 					if(this.board.possibleWin(this.getPickedPiece())!=-1){
-						this.setValue(-75);
+						this.setValue(-100);
 					}
 					else{
 						boolean forceWin = true;
@@ -99,7 +99,7 @@ public class Node {
 							}
 						}
 						if(forceWin){
-							this.setValue(50);
+							this.setValue(75);
 						}
 						else{
 							this.setValue((count/remainingPieces.size())*50);
@@ -116,7 +116,7 @@ public class Node {
 					remainingPieces.addAll(this.board.getRemainingPieces());
 					remainingPieces.remove(this.getPickedPiece());
 					if(this.board.possibleWin(this.getPickedPiece())!=-1){
-						this.setValue(75);
+						this.setValue(100);
 					}
 					else{
 						boolean forceLoss = true;
@@ -130,7 +130,7 @@ public class Node {
 							}
 						}
 						if(forceLoss){
-							this.setValue(-50);
+							this.setValue(-75);
 						}
 						else{
 							this.setValue(-(count/remainingPieces.size())*50);
