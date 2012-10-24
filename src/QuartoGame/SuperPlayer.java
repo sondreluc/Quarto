@@ -4,12 +4,15 @@ import java.util.Scanner;
 
 public class SuperPlayer extends AbstractPlayer {
 
+	private boolean heuristic;
+	
     public SuperPlayer(PlayerType pType, int id) {
         super(pType, id);
     }
 
-    public SuperPlayer(PlayerType pType, int id, int miniMaxDepth) {
+    public SuperPlayer(PlayerType pType, int id, int miniMaxDepth, boolean heuristic) {
         super(pType, id, miniMaxDepth);
+        this.heuristic = heuristic;
     }
 
     @Override
@@ -60,14 +63,14 @@ public class SuperPlayer extends AbstractPlayer {
 
     private Piece novicePickPiece(Board board){
         SuperNode root = new SuperNode(board, true, false, -1);
-        Piece piece = root.bestPiece(1);
+        Piece piece = root.bestPiece(1, heuristic);
         board.getRemainingPieces().remove(piece);
         return piece;
     }
 
     private Piece minmaxPickPiece(Board board){
         SuperNode root = new SuperNode(board, true, false, -1);
-        Piece piece = root.bestPiece(miniMaxDepth);
+        Piece piece = root.bestPiece(miniMaxDepth, heuristic);
         board.getRemainingPieces().remove(piece);
         return piece;
     }
@@ -84,13 +87,13 @@ public class SuperPlayer extends AbstractPlayer {
 
     private void novicePlacePiece(Board board, Piece piece) {
         SuperNode root = new SuperNode(board, true, true, -1);
-        int place = root.bestPlace(1);
+        int place = root.bestPlace(1, heuristic);
         board.placePiece(place, piece);
     }
 
     private void minmaxPlacePiece(Board board, Piece piece) {
         SuperNode root = new SuperNode(board, true, true, -1);
-        int place = root.bestPlace(miniMaxDepth);
+        int place = root.bestPlace(miniMaxDepth, heuristic);
         board.placePiece(place, piece);
     }
 

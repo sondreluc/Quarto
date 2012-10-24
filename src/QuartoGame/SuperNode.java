@@ -24,7 +24,7 @@ public class SuperNode {
         this.superBoard = gameState instanceof SuperBoard;
     }
 
-    public int bestPlace(int depth){
+    public int bestPlace(int depth, boolean heuristic){
         ArrayList<Integer> bestPlaces = new ArrayList<Integer>();
         int bestValue = -10000;
         if(!superBoard){
@@ -35,7 +35,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
                 SuperNode newNode = new SuperNode(newGameState, true, false, gameState.getFreePlaces().get(i));
-                int newValue = newNode.getValue(depth - 1, -10000, 10000, true);
+                int newValue = newNode.getValue(depth - 1, -10000, 10000, true, heuristic);
                 if(newValue > bestValue) {
                     bestValue = newValue;
                     bestPlaces.clear();
@@ -55,7 +55,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
                 SuperNode newNode = new SuperNode(newGameState, true, false, gameState.getFreePlaces().get(i));
-                int newValue = newNode.getValue(depth - 1, -10000, 10000, true);
+                int newValue = newNode.getValue(depth - 1, -10000, 10000, true, heuristic);
                 if(newValue > bestValue) {
                     bestValue = newValue;
                     bestPlaces.clear();
@@ -69,7 +69,7 @@ public class SuperNode {
         return bestPlaces.get((int) Math.floor(bestPlaces.size() * Math.random()));
     }
 
-    public Piece bestPiece(int depth){
+    public Piece bestPiece(int depth, boolean heuristic){
         
         int bestValue = -10000;
         ArrayList<Piece> bestPieces = new ArrayList<Piece>();
@@ -82,7 +82,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.setActivePiece(gameState.getRemainingPieces().get(i));
                 SuperNode newNode = new SuperNode(newGameState, false, true, -1);
-                int newValue = newNode.getValue(depth, -10000, 10000, true);
+                int newValue = newNode.getValue(depth, -10000, 10000, true, heuristic);
                 if(newValue > bestValue) {
                 	bestValue = newValue;
                     bestPieces.clear();
@@ -103,7 +103,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.setActivePiece(((SuperBoard)gameState).getNotWinningPieces().get(i));
                 SuperNode newNode = new SuperNode(newGameState, false, true, -1);
-                int newValue = newNode.getValue(depth, -10000, 10000, true);
+                int newValue = newNode.getValue(depth, -10000, 10000, true, heuristic);
                 if(newValue > bestValue) {
                 	bestValue = newValue;
                     bestPieces.clear();
@@ -118,7 +118,7 @@ public class SuperNode {
         return bestPieces.get((int) Math.floor(bestPieces.size() * Math.random()));
     }
 
-    private int getValue(int depth, int initAlpha, int initBeta, boolean checkForWin){
+    private int getValue(int depth, int initAlpha, int initBeta, boolean checkForWin, boolean heuristic){
     	if(!isPlace){
     		if(checkForWin && checkForWin()){
 	            return isMe? 9999 : -9999;
@@ -127,12 +127,15 @@ public class SuperNode {
     			if(superBoard){
     				if(((SuperBoard)gameState).getNotWinningPieces().size() == 0)
     					return isMe? -9998 : 9999;
-    				else if(depth == 0)
-        	            return heuristicValueOfGameState();
+    				else if(depth == 0){
+        	            if(heuristic) return heuristicValueOfGameState();
+        	            else return 0;
+        			}
     				checkForWin = false;
     			}
-    			else if(depth == 0)
-    	            return heuristicValueOfGameState();
+    			else if(depth == 0){
+    	            return 0;
+    			}
     		}
         }
       	int alpha = initAlpha;
@@ -144,7 +147,7 @@ public class SuperNode {
         	if(isPlace) newDepth--;
         	for(SuperNode child : children){
                 // Se her etter feil ;)
-            	alpha = Math.max(alpha, child.getValue(newDepth, alpha, beta, checkForWin));
+            	alpha = Math.max(alpha, child.getValue(newDepth, alpha, beta, checkForWin, heuristic));
                 if (beta <= alpha) break; // (Beta cut-off)
             }
             return alpha;
@@ -153,7 +156,7 @@ public class SuperNode {
         	int newDepth = depth;
         	if(isPlace) newDepth--;
         	for(SuperNode child : children){
-            	beta = Math.min(beta, child.getValue(newDepth, alpha, beta, checkForWin));
+            	beta = Math.min(beta, child.getValue(newDepth, alpha, beta, checkForWin, heuristic));
                 if (beta <= alpha) break; // (Alpha cut-off)
             }
             return beta;
@@ -208,7 +211,6 @@ public class SuperNode {
     }
     
     private int heuristicValueOfGameState(){
-		if(!superBoard) return 0;
 		SuperBoard state = (SuperBoard) gameState;
 		int fortegn = state.getNotWinningPieces().size() % 2 == 1? 1 : -1;
 		fortegn *= isMe? 1 : -1;
@@ -237,21 +239,6 @@ public class SuperNode {
     	boolean shape = true;
     	boolean consistency = true;
     	for(int i = 1; i < 4; i++){
-    		if(pieces.get(i) == null) return false;
-    		if(color && pieces.get(i).getColor() != c) color = false;
-    		if(height && pieces.get(i).getHeight() != h) height = false;
-    		if(shape && pieces.get(i).getShape() != s) shape = false;
-    		if(consistency && pieces.get(i).getConsistensy() != cons) consistency = false;
-    	}
-    	return color || height || shape || consistency;
-    }
-    
-    private boolean checkRow(ArrayList<Piece> pieces, Color c, Height h, Shape s, Consistensy cons){
-    	boolean color = true;
-    	boolean height = true;
-    	boolean shape = true;
-    	boolean consistency = true;
-    	for(int i = 0; i < 4; i++){
     		if(pieces.get(i) == null) return false;
     		if(color && pieces.get(i).getColor() != c) color = false;
     		if(height && pieces.get(i).getHeight() != h) height = false;

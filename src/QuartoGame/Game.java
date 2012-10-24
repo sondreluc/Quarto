@@ -228,8 +228,8 @@ public class Game {
         int playerTwoWins = 0;
         int ties = 0;
 
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
+        AbstractPlayer p1 = new SuperPlayer(PlayerType.MINIMAXD, 1, 3, true);
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.NOVICE, 2, 2, true);
         int games = 100;
         boolean log = false;
         boolean debug = false;
