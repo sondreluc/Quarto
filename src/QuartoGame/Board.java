@@ -8,7 +8,6 @@ public class Board {
 	private ArrayList<Piece> pieces;
 	private Piece activePiece;
 	
-
 	public Board(){
 		this.board = new ArrayList<Piece>();
 		for(int i=0; i<16; i++){

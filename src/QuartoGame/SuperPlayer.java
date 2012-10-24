@@ -17,13 +17,14 @@ public class SuperPlayer extends AbstractPlayer {
 
         switch (playerType) {
             case RANDOM:
-                return randomPickPiece(board, scanner, doMiniMax);
+                return randomPickPiece(board);
             case NOVICE:
-                return novicePickPiece(board, scanner, doMiniMax);
+                return novicePickPiece(board);
             case MINIMAXD:
-                return minmaxPickPiece(board, scanner, doMiniMax);
+                if(doMiniMax) return minmaxPickPiece(board);
+                else return novicePickPiece(board);
             case HUMAN:
-                return humanPickPiece(board, scanner, doMiniMax);
+                return humanPickPiece(board, scanner);
         }
         return null;
     }
@@ -34,69 +35,67 @@ public class SuperPlayer extends AbstractPlayer {
 
         switch (playerType) {
             case RANDOM:
-                randomPlacePiece(board, piece, scanner, doMiniMax, wrongPick);
+                randomPlacePiece(board, piece);
                 break;
             case NOVICE:
-                novicePlacePiece(board, piece, scanner, doMiniMax, wrongPick);
+                novicePlacePiece(board, piece);
                 break;
             case MINIMAXD:
-                minmaxPlacePiece(board, piece, scanner, doMiniMax, wrongPick);
+            	if(doMiniMax) minmaxPlacePiece(board, piece);
+            	else novicePlacePiece(board, piece);
                 break;
             case HUMAN:
-                humanPlacePiece(board, piece, scanner, doMiniMax, wrongPick);
+                humanPlacePiece(board, piece, scanner, wrongPick);
                 break;
         }
 
     }
 
 
-    private Piece randomPickPiece(Board board, Scanner scanner, boolean doMiniMax){
+    private Piece randomPickPiece(Board board){
     	Piece piece = board.getRemainingPieces().get((int) Math.floor(Math.random() * board.getRemainingPieces().size()));
     	board.getRemainingPieces().remove(piece);
         return piece;
     }
 
-    private Piece novicePickPiece(Board board, Scanner scanner, boolean doMiniMax){
-        SuperNode root = new SuperNode(board, true, false);
+    private Piece novicePickPiece(Board board){
+        SuperNode root = new SuperNode(board, true, false, -1);
         Piece piece = root.bestPiece(1);
         board.getRemainingPieces().remove(piece);
         return piece;
     }
 
-    private Piece minmaxPickPiece(Board board, Scanner scanner, boolean doMiniMax){
-        SuperNode root = new SuperNode(board, true, false);
+    private Piece minmaxPickPiece(Board board){
+        SuperNode root = new SuperNode(board, true, false, -1);
         Piece piece = root.bestPiece(miniMaxDepth);
         board.getRemainingPieces().remove(piece);
         return piece;
     }
 
-    private Piece humanPickPiece(Board board, Scanner scanner, boolean doMiniMax){
+    private Piece humanPickPiece(Board board, Scanner scanner){
         return null;
     }
 
 
-    private void randomPlacePiece(Board board, Piece piece, Scanner scanner,
-                                  boolean doMiniMax, boolean wrongPick) {
+    private void randomPlacePiece(Board board, Piece piece) {
         int place = board.getFreePlaces().get((int) Math.floor(Math.random() * board.getFreePlaces().size()));
         board.placePiece(place, piece);
     }
 
-    private void novicePlacePiece(Board board, Piece piece, Scanner scanner,
-                                  boolean doMiniMax, boolean wrongPick) {
-        SuperNode root = new SuperNode(board, true, true);
+    private void novicePlacePiece(Board board, Piece piece) {
+        SuperNode root = new SuperNode(board, true, true, -1);
         int place = root.bestPlace(1);
         board.placePiece(place, piece);
     }
 
-    private void minmaxPlacePiece(Board board, Piece piece, Scanner scanner,
-                                  boolean doMiniMax, boolean wrongPick) {
-        SuperNode root = new SuperNode(board, true, true);
+    private void minmaxPlacePiece(Board board, Piece piece) {
+        SuperNode root = new SuperNode(board, true, true, -1);
         int place = root.bestPlace(miniMaxDepth);
         board.placePiece(place, piece);
     }
 
     private void humanPlacePiece(Board board, Piece piece, Scanner scanner,
-                                 boolean doMiniMax, boolean wrongPick) {
+                                 boolean doMiniMax) {
 
     }
 }

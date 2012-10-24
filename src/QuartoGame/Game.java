@@ -5,7 +5,7 @@ import QuartoGame.AbstractPlayer.PlayerType;
 
 public class Game {
 
-    private Board board;
+    private SuperBoard board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
     private AbstractPlayer activePlayer;
@@ -15,7 +15,7 @@ public class Game {
     boolean printBoard;
 
     public Game(AbstractPlayer p1, AbstractPlayer p2, int numbGames, boolean log, boolean debug, boolean printBoard) {
-        this.board = new Board();
+        this.board = new SuperBoard();
         this.player1 = p1;
         this.player2 = p2;
         this.activePlayer = p1;
@@ -85,7 +85,7 @@ public class Game {
         return board;
     }
 
-    public void setBoard(Board board) {
+    public void setBoard(SuperBoard board) {
         this.board = board;
     }
 
@@ -94,12 +94,8 @@ public class Game {
 
         if (log) {
             System.out.println();
-            int tremP = board.getRemainingPieces().size();
-            if (remP == tremP){
-                System.out.println("SÆRR!!!");
-            }
-            remP = tremP;
             System.out.println("Remaining pieces:" + board.remainingToSting());
+            System.out.println("NotWinning: " + ((SuperBoard) board).getNotWinningPieces().toString());
         }
 
         Piece piece = this.activePlayer.doPickPiece(board, scanner, doMiniMax);
@@ -127,7 +123,6 @@ public class Game {
 
     public void printBoard() {
         System.out.println(board.printBoard());
-
     }
 
     public boolean isFinished(boolean log) {
@@ -234,11 +229,11 @@ public class Game {
         int ties = 0;
 
         AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
-        AbstractPlayer p2 = new Player(PlayerType.MINIMAXD, 2, 4);
-        int games = 100;
-        boolean log = false;
-        boolean debug = false;
-        boolean printBoard = false;
+        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
+        int games = 10;
+        boolean log = true;
+        boolean debug = true;
+        boolean printBoard = true;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -268,7 +263,7 @@ public class Game {
             int count = 1;
 
             while (!finished && count < 17 ) {
-                if (count < 8) {
+                if (count < 6) {
                     if (newGame.isLog()) {
                         System.out.println();
                         System.out.println("Round: " + count);
@@ -360,8 +355,11 @@ public class Game {
             System.out.println("Player " + p2.getPlayerID() + " won: " + playerTwoWins + " times!");
             System.out.println("The game tied: " + ties + " times!!");
             
-            System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() + " ms.");
-            System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() + " ms.");
+            System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() + " ms in total.");
+            System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() + " ms in total.");
+            
+            System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() / games + " ms in average per game.");
+            System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() / games + " ms in average per game.");
         }
     }
 
