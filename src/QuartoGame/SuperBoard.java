@@ -172,9 +172,6 @@ public class SuperBoard extends Board {
 	public void setSuper(SuperBoard gameState) {
 		this.notWinningPieces.clear();
 		this.notWinningPieces.addAll(gameState.getNotWinningPieces());//.clone();
-//		for(Piece p : gameState.getNotWinningPieces()){
-//			
-//		}
 		for(int i = 0; i < gameState.getWinningPieceSorts().length; i++){
 			this.winningPieceSorts[i] = gameState.getWinningPieceSorts()[i];
 		}
@@ -188,8 +185,5 @@ public class SuperBoard extends Board {
 		for(int i = 0; i < gameState.getPieceCounts().length; i++){
 			this.pieceCounts[i] = gameState.getPieceCounts()[i];
 		}
-		//this.winningPieceSorts = gameState.getWinningPieceSorts().clone();
-		//this.possibleWins = gameState.getPossibleWins().clone();
-		//this.pieceCounts = gameState.getPieceCounts().clone();
 	}
 }
