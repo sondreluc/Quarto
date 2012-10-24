@@ -96,10 +96,6 @@ public class SuperNode {
         else{
         	int size = ((SuperBoard)gameState).getNotWinningPieces().size();
         	if(size == 0) return gameState.getRemainingPieces().get(0);
-        	System.out.println(((SuperBoard)gameState).getNotWinningPieces().toString());
-        	System.out.println(size);
-        	if(size	== 1) 
-        		System.out.println();
         	for (int i = 0; i < size; i++) {
                 Board newGameState = new SuperBoard();
                 ((SuperBoard)newGameState).setSuper((SuperBoard) gameState);
@@ -208,11 +204,10 @@ public class SuperNode {
     
     private int heuristicValueOfGameState(){
 		if(!superBoard) return 0;
-//		SuperBoard state = (SuperBoard) gameState;
-//		int fortegn = state.getNotWinningPieces().size() % 2 == 1? 1 : -1;
-//		fortegn *= isMe? 1 : -1;
-//		return fortegn * ( 9000 / state.getNotWinningPieces().size());
-		return 0;
+		SuperBoard state = (SuperBoard) gameState;
+		int fortegn = state.getNotWinningPieces().size() % 2 == 1? 1 : -1;
+		fortegn *= isMe? 1 : -1;
+		return fortegn * ( 9000 / state.getNotWinningPieces().size());
     }
     
     private boolean checkForWin(){

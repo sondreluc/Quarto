@@ -15,7 +15,7 @@ public class Game {
     boolean printBoard;
 
     public Game(AbstractPlayer p1, AbstractPlayer p2, int numbGames, boolean log, boolean debug, boolean printBoard) {
-        this.board = new SuperBoard();
+        this.board = new SuperBoard(true);
         this.player1 = p1;
         this.player2 = p2;
         this.activePlayer = p1;
@@ -88,14 +88,14 @@ public class Game {
     public void setBoard(SuperBoard board) {
         this.board = board;
     }
-
-    private int remP = 0;
+    
     public void playTurn(boolean log, Scanner scanner, boolean doMiniMax) {
 
         if (log) {
             System.out.println();
             System.out.println("Remaining pieces:" + board.remainingToSting());
             System.out.println("NotWinning: " + ((SuperBoard) board).getNotWinningPieces().toString());
+            board.getWinningPieceSorts();
         }
 
         Piece piece = this.activePlayer.doPickPiece(board, scanner, doMiniMax);
@@ -230,10 +230,10 @@ public class Game {
 
         AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
         AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
-        int games = 10;
-        boolean log = true;
-        boolean debug = true;
-        boolean printBoard = true;
+        int games = 1000;
+        boolean log = false;
+        boolean debug = false;
+        boolean printBoard = false;
 
         Scanner scanner = new Scanner(System.in);
 

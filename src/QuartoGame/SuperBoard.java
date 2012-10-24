@@ -14,10 +14,18 @@ public class SuperBoard extends Board {
 	private int[] pieceCounts = new int[10];
 	private ArrayList<Piece> notWinningPieces = new ArrayList<Piece>();
 	
+	private boolean log = false;
+	
 	
 	public SuperBoard() {
 		super();
 		this.notWinningPieces = (ArrayList<Piece>) getRemainingPieces().clone();
+	}
+	
+	public SuperBoard(boolean log){
+		super();
+		this.notWinningPieces = (ArrayList<Piece>) getRemainingPieces().clone();
+		this.log = log;
 	}
 	
 	@Override
@@ -155,12 +163,6 @@ public class SuperBoard extends Board {
 							winningPieceSorts[i] = true;
 							break;
 						}
-						else{
-							int lol = 0;
-						}
-					}
-					if(!winningPieceSorts[i]){
-						int lol = 0;
 					}
 				}
 			}
@@ -168,9 +170,26 @@ public class SuperBoard extends Board {
 	}
 
 	public void setSuper(SuperBoard gameState) {
-		this.notWinningPieces = (ArrayList<Piece>) gameState.notWinningPieces.clone();
-		this.winningPieceSorts = gameState.getWinningPieceSorts().clone();
-		this.possibleWins = gameState.getPossibleWins().clone();
-		this.pieceCounts = gameState.getPieceCounts().clone();
+		this.notWinningPieces.clear();
+		this.notWinningPieces.addAll(gameState.getNotWinningPieces());//.clone();
+//		for(Piece p : gameState.getNotWinningPieces()){
+//			
+//		}
+		for(int i = 0; i < gameState.getWinningPieceSorts().length; i++){
+			this.winningPieceSorts[i] = gameState.getWinningPieceSorts()[i];
+		}
+		
+		for(int i = 0; i < gameState.getPossibleWins().length; i++){
+			for(int j = 0; j < gameState.getPossibleWins()[0].length; j++){
+				this.possibleWins[i][j] = gameState.getPossibleWins()[i][j];
+			}
+		}
+		
+		for(int i = 0; i < gameState.getPieceCounts().length; i++){
+			this.pieceCounts[i] = gameState.getPieceCounts()[i];
+		}
+		//this.winningPieceSorts = gameState.getWinningPieceSorts().clone();
+		//this.possibleWins = gameState.getPossibleWins().clone();
+		//this.pieceCounts = gameState.getPieceCounts().clone();
 	}
 }
