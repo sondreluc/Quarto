@@ -142,6 +142,11 @@ public class Game {
                 if (settings[0].toUpperCase().matches("D")) {
                     break;
                 }
+                else if (settings[0].toUpperCase().matches("T")){
+                    tournamentDemo();
+                    System.exit(0);
+                    break;
+                }
             } else if (settings.length == 6) {
                 switch (settings[0].toUpperCase()) {
                     case "H":
@@ -221,31 +226,56 @@ public class Game {
         }
     }
 
+    public static void tournamentDemo(){
 
-    public static void main(String[] args) {
-        int gameCount = 0;
-        int playerOneWins = 0;
-        int playerTwoWins = 0;
-        int ties = 0;
-
-        AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
-        AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3, true);
+        AbstractPlayer p1;
+        AbstractPlayer p2;
         int games = 100;
         boolean log = false;
         boolean debug = false;
         boolean printBoard = false;
 
+
+        p1 = new Player(PlayerType.MINIMAXD, 1, 3);
+        p2 = new MVPlayer(PlayerType.MINIMAXD, 1, 3);
+
+        Game.game(p1, p2, games, log, debug, printBoard, false);
+
+        p1 = new Player(PlayerType.MINIMAXD, 1, 3);
+        p2 = new SuperPlayer(PlayerType.MINIMAXD, 1, 3, true);
+
+        Game.game(p1, p2, games, log, debug, printBoard, false);
+
+        p1 = new MVPlayer(PlayerType.MINIMAXD, 1, 3);
+        p2 = new SuperPlayer(PlayerType.MINIMAXD, 1, 3, true);
+
+        Game.game(p1, p2, games, log, debug, printBoard, false);
+
+    }
+
+    public static void game(AbstractPlayer p1, AbstractPlayer p2, int games, boolean log, boolean debug, boolean printBoard, boolean scan){
+        int gameCount = 0;
+        int playerOneWins = 0;
+        int playerTwoWins = 0;
+        int ties = 0;
+
         Scanner scanner = new Scanner(System.in);
 
         Game newGame = new Game(p1, p2, games, log, debug, printBoard);
 
-        System.out.println("WELCOME TO QUARTO!");
-        System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
-        System.out.println("Default is: \"N-R-1-1-0-0\", to choose default type D");
-        System.out.println("Available player types are: (H)Human, (R)Random, (N)Novice, (MD)Minimax to depth D(remember to choose a number for D!)");
+        if(scan){
 
-        //newGame.initGame(scanner);
+            System.out.println("WELCOME TO QUARTO!");
+            System.out.println("Choose settings by writing: \"Player 1 type - Player 2 type - Number of games - log On/0ff(1/0)- debug On/0ff(1/0) - printboard On/0ff(1/0)\"");
+            System.out.println("Default is: \"N-R-1-1-0-0\", to choose default type D");
+            System.out.println("Available player types are: (H)Human, (R)Random, (N)Novice, (MD)Minimax to depth D(remember to choose a number for D!)");
+            System.out.println("To play the Tournament Demo type T");
 
+            newGame.initGame(scanner);
+        }
+
+        System.out.println();
+        System.out.println();
         System.out.println("Plays " + newGame.getGames() + " games!");
         System.out.println("Player 1 is type: " + newGame.getPlayer1().getPlayerType().toString() + (newGame.getPlayer1().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer1().getMiniMaxDepth() : ""));
         System.out.println("Player 2 is type: " + newGame.getPlayer2().getPlayerType().toString() + (newGame.getPlayer2().getMiniMaxDepth() > 0 ? "-" + newGame.getPlayer2().getMiniMaxDepth() : ""));
@@ -256,7 +286,7 @@ public class Game {
                 Game cloneGame = new Game(newGame.getPlayer1(), newGame.getPlayer2(), newGame.getGames(), newGame.isLog(), newGame.isDebug(), newGame.isPrintBoard());
                 newGame = cloneGame;
                 if(gameCount % 2 == 1)
-                	newGame.setActivePlayer(p2);
+                    newGame.setActivePlayer(p2);
             }
             boolean finished = false;
 
@@ -342,25 +372,37 @@ public class Game {
                 count++;
             }
             if(!finished)
-            	ties++;
+                ties++;
             if(p1.getBestPick() != null)
                 p1.setBestPick(null);
             if(p2.getBestPick() != null)
-            	p2.setBestPick(null);
+                p2.setBestPick(null);
             gameCount++;
         }
         if (newGame.getGames() > 1) {
             System.out.println("DONE!");
-            System.out.println("Player " + p1.getPlayerID() + " won: " + playerOneWins + " times!");
-            System.out.println("Player " + p2.getPlayerID() + " won: " + playerTwoWins + " times!");
+            System.out.println("Player " + p1.getPlayerID() + " of type " + p1.getClass().getName() + " won: " + playerOneWins + " times!");
+            System.out.println("Player " + p2.getPlayerID() + " of type " + p2.getClass().getName() + " won: " + playerTwoWins + " times!");
             System.out.println("The game tied: " + ties + " times!!");
-            
+
             System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() + " ms in total.");
             System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() + " ms in total.");
-            
+
             System.out.println("Player " + p1.getPlayerID() + " spent " + p1.getTimeSpent() / games + " ms in average per game.");
             System.out.println("Player " + p2.getPlayerID() + " spent " + p2.getTimeSpent() / games + " ms in average per game.");
         }
+    }
+
+    public static void main(String[] args) {
+
+        AbstractPlayer p1 = new Player(PlayerType.NOVICE, 1, 3);
+        AbstractPlayer p2 = new Player(PlayerType.RANDOM, 2, 3);
+        int games = 1;
+        boolean log = true;
+        boolean debug = true;
+        boolean printBoard = false;
+
+        Game.game(p1, p2, games, log, debug, printBoard, true);
     }
 
 }
