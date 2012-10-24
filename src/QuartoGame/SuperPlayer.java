@@ -63,7 +63,7 @@ public class SuperPlayer extends AbstractPlayer {
 
     private Piece novicePickPiece(Board board){
         SuperNode root = new SuperNode(board, true, false, -1);
-        Piece piece = root.bestPiece(1, false);
+        Piece piece = root.bestPiece(1, heuristic);
         board.getRemainingPieces().remove(piece);
         return piece;
     }
@@ -87,7 +87,7 @@ public class SuperPlayer extends AbstractPlayer {
 
     private void novicePlacePiece(Board board, Piece piece) {
         SuperNode root = new SuperNode(board, true, true, -1);
-        int place = root.bestPlace(1, false);
+        int place = root.bestPlace(1, heuristic);
         board.placePiece(place, piece);
     }
 
