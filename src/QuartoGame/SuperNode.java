@@ -35,7 +35,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
                 SuperNode newNode = new SuperNode(newGameState, true, false, gameState.getFreePlaces().get(i));
-                int newValue = newNode.getValue(depth - 1, -10000, 10000);
+                int newValue = newNode.getValue(depth - 1, -10000, 10000, true);
                 if(newValue > bestValue) {
                     bestValue = newValue;
                     bestPlaces.clear();
@@ -55,7 +55,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.placePiece(gameState.getFreePlaces().get(i), gameState.getActivePiece());
                 SuperNode newNode = new SuperNode(newGameState, true, false, gameState.getFreePlaces().get(i));
-                int newValue = newNode.getValue(depth - 1, -10000, 10000);
+                int newValue = newNode.getValue(depth - 1, -10000, 10000, true);
                 if(newValue > bestValue) {
                     bestValue = newValue;
                     bestPlaces.clear();
@@ -82,7 +82,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.setActivePiece(gameState.getRemainingPieces().get(i));
                 SuperNode newNode = new SuperNode(newGameState, false, true, -1);
-                int newValue = newNode.getValue(depth, -10000, 10000);
+                int newValue = newNode.getValue(depth, -10000, 10000, true);
                 if(newValue > bestValue) {
                 	bestValue = newValue;
                     bestPieces.clear();
@@ -103,7 +103,7 @@ public class SuperNode {
                 newGameState.setPieces(gameState.getPieces());
                 newGameState.setActivePiece(((SuperBoard)gameState).getNotWinningPieces().get(i));
                 SuperNode newNode = new SuperNode(newGameState, false, true, -1);
-                int newValue = newNode.getValue(depth, -10000, 10000);
+                int newValue = newNode.getValue(depth, -10000, 10000, true);
                 if(newValue > bestValue) {
                 	bestValue = newValue;
                     bestPieces.clear();
@@ -118,17 +118,22 @@ public class SuperNode {
         return bestPieces.get((int) Math.floor(bestPieces.size() * Math.random()));
     }
 
-    private int getValue(int depth, int initAlpha, int initBeta){
+    private int getValue(int depth, int initAlpha, int initBeta, boolean checkForWin){
     	if(!isPlace){
-    		if(superBoard && ((SuperBoard)gameState).getNotWinningPieces().size() == 0){
-	    		return isMe? -9999 : 9999;
-	    	}
-        	else if(checkForWin()){
+    		if(checkForWin && checkForWin()){
 	            return isMe? 9999 : -9999;
 	        }
-	        else if(depth == 0){
-	            return heuristicValueOfGameState();
-	        }
+    		else{
+    			if(superBoard){
+    				if(((SuperBoard)gameState).getNotWinningPieces().size() == 0)
+    					return isMe? -9998 : 9999;
+    				else if(depth == 0)
+        	            return heuristicValueOfGameState();
+    				checkForWin = false;
+    			}
+    			else if(depth == 0)
+    	            return heuristicValueOfGameState();
+    		}
         }
       	int alpha = initAlpha;
         int beta = initBeta;
@@ -139,7 +144,7 @@ public class SuperNode {
         	if(isPlace) newDepth--;
         	for(SuperNode child : children){
                 // Se her etter feil ;)
-            	alpha = Math.max(alpha, child.getValue(newDepth, alpha, beta));
+            	alpha = Math.max(alpha, child.getValue(newDepth, alpha, beta, checkForWin));
                 if (beta <= alpha) break; // (Beta cut-off)
             }
             return alpha;
@@ -148,7 +153,7 @@ public class SuperNode {
         	int newDepth = depth;
         	if(isPlace) newDepth--;
         	for(SuperNode child : children){
-            	beta = Math.min(beta, child.getValue(newDepth, alpha, beta));
+            	beta = Math.min(beta, child.getValue(newDepth, alpha, beta, checkForWin));
                 if (beta <= alpha) break; // (Alpha cut-off)
             }
             return beta;

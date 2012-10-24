@@ -230,7 +230,7 @@ public class Game {
 
         AbstractPlayer p1 = new Player(PlayerType.MINIMAXD, 1, 3);
         AbstractPlayer p2 = new SuperPlayer(PlayerType.MINIMAXD, 2, 3);
-        int games = 1000;
+        int games = 100;
         boolean log = false;
         boolean debug = false;
         boolean printBoard = false;
